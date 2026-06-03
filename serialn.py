@@ -9,6 +9,7 @@ def hi():
 def show_recipes():
     recipefolder = Path.home() / "recipes"
     recipeindexpath = recipefolder / "recipeindex.txt"
+    recipelist = list(file.name for file in recipefolder.glob("*.txt"))
 
     if recipefolder.exists():
         click.echo("yup the recipes folder is there")
@@ -25,6 +26,11 @@ def show_recipes():
 
     recipeindex.close()
     recipeindex = open(f"{recipefolder}/recipeindex.txt", "a")
+
+    for i in recipelist:
+        if i != "recipeindex.txt":
+            recipe = open(f"{recipefolder}/{i}", "r")
+            click.echo(f"{i}: {recipe.read()}")
 
     recipeindex.write("hello")
     recipeindex.close()
