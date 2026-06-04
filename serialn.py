@@ -70,7 +70,6 @@ def refresh_recipes():
         for i in filesinfolder:
             if i != "recipeindex.txt":
                 recipeindex.write(f"{i}\n")
-        click.echo("recipes:")
         recipeindex.close()
         recipeindex = open(f"{recipefolder}/recipeindex.txt", "r")
         templist = recipeindex.readlines()
