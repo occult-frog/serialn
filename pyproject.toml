@@ -7,7 +7,9 @@ dependencies = ["click>=8.1"]
 
 [project.scripts]
 hi = "serialn:hi"
-show_recipes = "serialn:show_recipes"
+list_recipes = "serialn:list_recipes"
+view_recipe = "serialn:view_recipe"
+refresh_recipes = "serialn:refresh_recipes"
 
 [build-system]
 requires = ["flit_core<4"]
