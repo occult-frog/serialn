@@ -33,6 +33,8 @@ def list_recipes():
     for i in templist:
         filelist.append(i.strip())
 
+    click.echo("recipes:")
+
     for i in filelist:
         if (recipefolder/i).exists():
             click.echo(f"{i}: found :)")
@@ -57,13 +59,27 @@ def view_recipe(recipename):
 
 
 @click.command()
-@click.option('--remove_absent', 'remove_absent', help="remove recipes from the recipe index that aren't in the recipe folder")
-def refresh_recipes(remove_absent):
+def refresh_recipes():
     recipefolder = Path.home()/"recipes"
     if recipefolder.exists() and (recipefolder/"recipeindex.txt").exists():
-        if remove_absent == "":
-            recipeindex = open(f"{recipefolder}/recipeidex.txt", "r+")
-            templist = recipeindex.readlines()
-            filelist = []
-            for i in templist:
-                filelist.append(i.strip())
+        filesinfolder = []
+        alltxtfiles = list(recipefolder.glob("*.txt"))
+        for i in alltxtfiles:
+            filesinfolder.append((str(i)).removeprefix(f"{recipefolder}/"))
+        recipeindex = open(f"{recipefolder}/recipeindex.txt", "w+")
+        for i in filesinfolder:
+            if i != "recipeindex.txt":
+                recipeindex.write(f"{i}\n")
+        click.echo("recipes:")
+        recipeindex.close()
+        recipeindex = open(f"{recipefolder}/recipeindex.txt", "r")
+        templist = recipeindex.readlines()
+        filelist = []
+        for i in templist:
+            filelist.append(i.strip())
+        click.echo("recipes:")
+        for i in filelist:
+            click.echo(i)
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"show_recipes\" to create them")
