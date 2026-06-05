@@ -63,15 +63,7 @@ def view_recipe(recipename):
 def refresh_recipes():
     recipefolder = Path.home()/"recipes"
     if recipefolder.exists() and (recipefolder/"recipeindex.txt").exists():
-        filesinfolder = []
-        alltxtfiles = list(recipefolder.glob("*.txt"))
-        for i in alltxtfiles:
-            filesinfolder.append((str(i)).removeprefix(f"{recipefolder}/"))
-        recipeindex = open(f"{recipefolder}/recipeindex.txt", "w+")
-        for i in filesinfolder:
-            if i != "recipeindex.txt":
-                recipeindex.write(f"{i}\n")
-        recipeindex.close()
+        refreshIndex(recipefolder)
         recipeindex = open(f"{recipefolder}/recipeindex.txt", "r")
         templist = recipeindex.readlines()
         filelist = []
@@ -173,3 +165,34 @@ def add_recipe(recipename):
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
+
+
+@click.command()
+@click.argument("recipename", required=True)
+def remove_recipe(recipename):
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.txt").exists():
+        if (recipefolder / f"{recipename}.txt").exists():
+            confirmation = input(f"u sure you wanna remove {recipename}? (y/N): ")
+            if confirmation == "y":
+                (recipefolder / f"{recipename}.txt").unlink()
+                click.echo("recipe removed :)")
+                refreshIndex(recipefolder)
+        else:
+            click.echo(f"recipe with the name {recipename} doesnt exists :P\n"
+                       f"try typing the recipe name without the .txt extension")
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"list_recipes\" to create them")
+
+
+def refreshIndex(recipefolder):
+    filesinfolder = []
+    alltxtfiles = list(recipefolder.glob("*.txt"))
+    for i in alltxtfiles:
+        filesinfolder.append((str(i)).removeprefix(f"{recipefolder}/"))
+    recipeindex = open(f"{recipefolder}/recipeindex.txt", "w+")
+    for i in filesinfolder:
+        if i != "recipeindex.txt":
+            recipeindex.write(f"{i}\n")
+    recipeindex.close()

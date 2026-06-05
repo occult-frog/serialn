@@ -32,3 +32,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     add_recipe [RECIPENAME]
     ```
+5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension.
+    ```
+    remove_recipe [RECIPENAME]
+    ```
