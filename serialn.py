@@ -1,5 +1,3 @@
-from idlelib import filelist
-
 import click
 from pathlib import Path
 
@@ -82,3 +80,75 @@ def refresh_recipes():
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"show_recipes\" to create them")
+
+
+@click.command()
+def add_recipe():
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.txt").exists():
+        ingredientcount = int(input("how many ingredients are there?: "))
+        stepcount = int(input("how many steps are there?: "))
+        ingredients = []
+        ingredientamounts = []
+        steps = []
+        extranotes = []
+
+        for i in range(ingredientcount):
+            if i+1 == 1: ordinalsuffix = "st"
+            elif i+1 == 2: ordinalsuffix = "nd"
+            elif i+1 == 3: ordinalsuffix = "rd"
+            else: ordinalsuffix = "th"
+            j = "N"
+            ing = input(f"enter name of {i+1}{ordinalsuffix} ingredient: ")
+            while j != "y":
+                k = input(f"confirm ingredient? (y/N): ")
+                if k == "y": j = k
+                else: ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
+            ingredients.append(f"{ing}\n")
+        click.echo(ingredients)
+
+        for i in range(stepcount):
+            if i+1 == 1: ordinalsuffix = "st"
+            elif i+1 == 2: ordinalsuffix = "nd"
+            elif i+1 == 3: ordinalsuffix = "rd"
+            else: ordinalsuffix = "th"
+            j = "N"
+            step = input(f"enter {i+1}{ordinalsuffix} step: ")
+            while j != "y":
+                k = input(f"confirm step? (y/N): ")
+                if k == "y": j = k
+                else: step = input(f"enter {i+1}{ordinalsuffix} step: ")
+            steps.append(f"{step}\n")
+        click.echo(steps)
+
+        j = "N"
+        extranotesquestion = input("do you want to add any extra notes? (y/N): ")
+        if extranotesquestion == "y":
+            i = 0
+            while j != "stop":
+                i += 1
+                if i == 1: ordinalsuffix = "st"
+                elif i == 2: ordinalsuffix = "nd"
+                elif i == 3: ordinalsuffix = "rd"
+                else: ordinalsuffix = "th"
+                note = input(f"enter {i}{ordinalsuffix} note: ")
+                k = "N"
+                while k != "y":
+                    l = input(f"confirm note? (y/N): ")
+                    if l == "y":
+                        k = l
+                    else:
+                        note = input(f"enter {i}{ordinalsuffix} note: ")
+                m = input("add another note? (y/N): ")
+                if m == "N":
+                    j = "stop"
+                extranotes.append(f"{note}\n")
+
+        recipe = "\nIngredients:\n"
+        recipe += "".join(map(str, ingredients))
+        recipe += "".join("\nSteps:\n")
+        recipe += "".join(map(str, steps))
+        if extranotesquestion == "y":
+            recipe += "".join("\nExtra notes:\n")
+            recipe += "".join(map(str, extranotes))
+        click.echo(recipe)

@@ -10,6 +10,7 @@ hi = "serialn:hi"
 list_recipes = "serialn:list_recipes"
 view_recipe = "serialn:view_recipe"
 refresh_recipes = "serialn:refresh_recipes"
+add_recipe = "serialn:add_recipe"
 
 [build-system]
 requires = ["flit_core<4"]
