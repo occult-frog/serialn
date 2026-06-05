@@ -12,7 +12,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     list_recipes
     ```
-2. Don't pass the recipe name as [RECIPENAME].txt in view_recipe and add_recipe commands. Pass it without the extension.
+2. Don't pass the recipe name as [RECIPENAME].txt in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
 
 
 ## Current commands:
