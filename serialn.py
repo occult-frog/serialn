@@ -48,12 +48,15 @@ def view_recipe(recipename):
     recipefolder = Path.home()/"recipes"
 
     if recipefolder.exists() and (recipefolder/"recipeindex.txt").exists():
-        if (recipefolder/recipename).exists():
-            recipefile = open(recipefolder/recipename, "r")
+        if (recipefolder / f"{recipename}.txt").exists():
+            recipefile = open(recipefolder/f"{recipename}.txt", "r")
             click.echo(recipefile.read())
+        else:
+            click.echo(f"recipe with the name {recipename} does not exist :(\n"
+                       f"try typing the recipe name without the .txt extension")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"show_recipes\" to create them")
+                   "run \"list_recipes\" to create them")
 
 
 @click.command()
@@ -79,7 +82,7 @@ def refresh_recipes():
             click.echo(i)
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"show_recipes\" to create them")
+                   "run \"list_recipes\" to create them")
 
 
 @click.command()
@@ -169,4 +172,4 @@ def add_recipe(recipename):
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"show_recipes\" to create them")
+                   "run \"list_recipes\" to create them")
