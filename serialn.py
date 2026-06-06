@@ -92,10 +92,7 @@ def add_recipe(recipename):
             extranotes = []
 
             for i in range(ingredientcount):
-                if i+1 == 1: ordinalsuffix = "st"
-                elif i+1 == 2: ordinalsuffix = "nd"
-                elif i+1 == 3: ordinalsuffix = "rd"
-                else: ordinalsuffix = "th"
+                ordinalsuffix = ordinalNumber(i+1)
                 j = "N"
                 ing = input(f"enter name of {i+1}{ordinalsuffix} ingredient: ")
                 while j != "y":
@@ -123,10 +120,7 @@ def add_recipe(recipename):
                 i = 0
                 while j != "stop":
                     i += 1
-                    if i == 1: ordinalsuffix = "st"
-                    elif i == 2: ordinalsuffix = "nd"
-                    elif i == 3: ordinalsuffix = "rd"
-                    else: ordinalsuffix = "th"
+                    ordinalsuffix = ordinalNumber(i)
                     note = input(f"enter {i}{ordinalsuffix} note: ")
                     k = "N"
                     while k != "y":
@@ -196,3 +190,10 @@ def refreshIndex(recipefolder):
         if i != "recipeindex.txt":
             recipeindex.write(f"{i}\n")
     recipeindex.close()
+
+
+def ordinalNumber(i):
+    if i == 1: return "st"
+    elif i == 2: return "nd"
+    elif i == 3: return "rd"
+    else: return "th"
