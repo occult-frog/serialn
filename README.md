@@ -1,10 +1,8 @@
 # serialn
 
-serialn is a CLI tool/ CLI app to view, edit, and store recipes.
-serialn is made using the click module for python.
-serialn is experimental so do expect stuff to break.
+serialn is a CLI tool/CLI app to view, edit, and store recipes. It is experimental so do expect stuff to break. It's also not finished yet.
 
-It's not finished yet.
+serialn is made using the click module for python.
 
 All the code is by me. No AI was used in the development of this project.
 
