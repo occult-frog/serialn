@@ -1,7 +1,8 @@
 # serialn
 
-serialn is a CLI tool I'm making to experiment around with making CLI tools in python. Currently im making commands to view, edit, and store recipes.
+serialn is a CLI tool/ CLI app to view, edit, and store recipes.
 serialn is made using the click module for python.
+serialn is experimental so do expect stuff to break.
 
 It's not finished yet.
 
