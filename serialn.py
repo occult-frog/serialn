@@ -6,6 +6,7 @@ from pathlib import Path
 def hi():
     click.echo("hi")
 
+
 @click.command()
 def list_recipes():
     recipefolder = Path.home() / "recipes"
@@ -32,9 +33,9 @@ def list_recipes():
 
     for i in filelist:
         if (recipefolder/i[0]).exists():
-            click.echo(f"{i[0]}: found :)")
+            click.echo(f"{i[0]} ---- {i[1]}: found :)")
         else:
-            click.echo(f"{i[0]}: not found :(")
+            click.echo(f"{i[0]} ---- {i[1]}: not found :(")
 
     recipeindex.close()
 
@@ -44,7 +45,7 @@ def list_recipes():
 def view_recipe(recipename):
     recipefolder = Path.home()/"recipes"
 
-    if recipefolder.exists() and (recipefolder/"recipeindex.txt").exists():
+    if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
         if (recipefolder / f"{recipename}.txt").exists():
             recipefile = open(recipefolder/f"{recipename}.txt", "r")
             click.echo(recipefile.read())
@@ -75,8 +76,8 @@ def refresh_recipes():
 @click.argument("recipename", required=True)
 def add_recipe(recipename):
     recipefolder = Path.home() / "recipes"
-    if recipefolder.exists() and (recipefolder / "recipeindex.txt").exists():
-        if (recipefolder/recipename).exists():
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
+        if (recipefolder/f"{recipename}.txt").exists():
             click.echo(f"recipe with the name {recipename} already exists :P")
         else:
             ingredientcount = int(input("how many ingredients are there?: "))
@@ -84,6 +85,7 @@ def add_recipe(recipename):
             ingredients = []
             steps = []
             extranotes = []
+            tags = ""
 
             for i in range(ingredientcount):
                 ordinalsuffix = ordinalNumber(i+1)
@@ -91,20 +93,17 @@ def add_recipe(recipename):
                 ing = input(f"enter name of {i+1}{ordinalsuffix} ingredient: ")
                 while j != "y":
                     k = input(f"confirm ingredient? (y/N): ")
-                    if k == "y": j = k
+                    if k == "y" and k != "N": j = k
                     else: ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
                 ingredients.append(f"{ing}\n")
 
             for i in range(stepcount):
-                if i+1 == 1: ordinalsuffix = "st"
-                elif i+1 == 2: ordinalsuffix = "nd"
-                elif i+1 == 3: ordinalsuffix = "rd"
-                else: ordinalsuffix = "th"
+                ordinalsuffix = ordinalNumber(i+1)
                 j = "N"
                 step = input(f"enter {i+1}{ordinalsuffix} step: ")
                 while j != "y":
                     k = input(f"confirm step? (y/N): ")
-                    if k == "y": j = k
+                    if k == "y" and k != "N": j = k
                     else: step = input(f"enter {i+1}{ordinalsuffix} step: ")
                 steps.append(f"{step}\n")
 
@@ -124,9 +123,14 @@ def add_recipe(recipename):
                         else:
                             note = input(f"enter {i}{ordinalsuffix} note: ")
                     m = input("add another note? (y/N): ")
-                    if m == "N":
+                    if m == "N" and m != "y":
                         j = "stop"
                     extranotes.append(f"{note}\n")
+
+            j = "N"
+            tagsquestion = input("do you want to add any tags? (y/N): ")
+            if tagsquestion == "y":
+                tags = input(f"enter all the tags(with the #): ")
 
             click.echo("\n")
             recipe = "Ingredients:\n"
@@ -139,6 +143,8 @@ def add_recipe(recipename):
                 recipe += "".join("\nExtra notes:\n")
                 for i in range(len(extranotes)):
                     recipe += "".join(f"{i + 1}. {extranotes[i]}")
+            if tagsquestion == "y":
+                recipe += "".join(f"\nTags:{tags}")
             click.echo(recipe)
 
             confirmrecipe = input("confirm recipe? (y/N): ")
@@ -147,8 +153,15 @@ def add_recipe(recipename):
                 recipefile.write(recipe)
                 recipefile.close()
                 click.echo("recipe saved :)")
-                recipeindex = open(f"{recipefolder}/recipeindex.txt", "a+")
-                recipeindex.write(f"\n{recipename}.txt")
+                recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+                recipelist = list(csv.reader(recipeindex))
+                recipeindex.close()
+                recipebutinlist = [f"{recipename}.txt", tags]
+                recipelist.append(recipebutinlist)
+                recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+                writer = csv.writer(recipeindex)
+                writer.writerows(recipelist)
+                recipeindex.close()
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
@@ -179,7 +192,7 @@ def refreshIndex(recipefolder):
     alltxtfiles = list(recipefolder.glob("*.txt"))
     for i in alltxtfiles:
         filesinfolder.append(f"{i}".removeprefix(f"{recipefolder}/"))
-    recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
     alllist = list(csv.reader(recipeindex))
     reicpelist = []
     hashlist = []
@@ -190,10 +203,17 @@ def refreshIndex(recipefolder):
             hashlist.append(alllist[i][1])
         else:
             hashlist.append("no_tags")
+    recipeindex.close()
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
     for i in range(len(filesinfolder)):
-        if i != "recipeindex.txt":
-            if i in reicpelist:
-                finallist.append([i, hashlist])
+        if filesinfolder[i] != "recipeindex.txt":
+            if filesinfolder[i] in reicpelist:
+                j = reicpelist.index(filesinfolder[i])
+                finallist.append([filesinfolder[i], hashlist[j]])
+            else:
+                finallist.append([filesinfolder[i], "no_tags"])
+    writer = csv.writer(recipeindex)
+    writer.writerows(finallist)
     recipeindex.close()
 
 
