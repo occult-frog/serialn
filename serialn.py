@@ -1,4 +1,5 @@
 import click
+import csv
 from pathlib import Path
 
 @click.command()
@@ -8,7 +9,7 @@ def hi():
 @click.command()
 def list_recipes():
     recipefolder = Path.home() / "recipes"
-    recipeindexpath = recipefolder / "recipeindex.txt"
+    recipeindexpath = recipefolder / "recipeindex.csv"
 
     if recipefolder.exists():
         click.echo("yup the recipes folder is there :D")
@@ -17,27 +18,23 @@ def list_recipes():
         click.echo("recipes folder mkdired :)")
 
     if recipeindexpath.exists():
-        recipeindex = open(f"{recipefolder}/recipeindex.txt", "r+")
+        recipeindex = open(f"{recipefolder}/recipeindex.csv", "r+")
         click.echo("can confirm the recipeindex file is there :D\n")
     else:
-        recipeindex = open(f"{recipefolder}/recipeindex.txt", "x")
+        recipeindex = open(f"{recipefolder}/recipeindex.csv", "x")
         click.echo("recipeindex file has been created :)\n")
 
     recipeindex.close()
-    recipeindex = open(f"{recipefolder}/recipeindex.txt", "r")
-    templist = recipeindex.readlines()
-    filelist = []
-
-    for i in templist:
-        filelist.append(i.strip())
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+    filelist = list(csv.reader(recipeindex))
 
     click.echo("recipes:")
 
     for i in filelist:
-        if (recipefolder/i).exists():
-            click.echo(f"{i}: found :)")
+        if (recipefolder/i[0]).exists():
+            click.echo(f"{i[0]}: found :)")
         else:
-            click.echo(f"{i}: not found :(")
+            click.echo(f"{i[0]}: not found :(")
 
     recipeindex.close()
 
@@ -62,16 +59,13 @@ def view_recipe(recipename):
 @click.command()
 def refresh_recipes():
     recipefolder = Path.home()/"recipes"
-    if recipefolder.exists() and (recipefolder/"recipeindex.txt").exists():
+    if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
         refreshIndex(recipefolder)
-        recipeindex = open(f"{recipefolder}/recipeindex.txt", "r")
-        templist = recipeindex.readlines()
-        filelist = []
-        for i in templist:
-            filelist.append(i.strip())
+        recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+        filelist = list(csv.reader(recipeindex))
         click.echo("recipes:")
         for i in filelist:
-            click.echo(i)
+            click.echo(f"{i[0]} ----- {i[1]}")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -184,11 +178,22 @@ def refreshIndex(recipefolder):
     filesinfolder = []
     alltxtfiles = list(recipefolder.glob("*.txt"))
     for i in alltxtfiles:
-        filesinfolder.append((str(i)).removeprefix(f"{recipefolder}/"))
-    recipeindex = open(f"{recipefolder}/recipeindex.txt", "w+")
-    for i in filesinfolder:
+        filesinfolder.append(f"{i}".removeprefix(f"{recipefolder}/"))
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+    alllist = list(csv.reader(recipeindex))
+    reicpelist = []
+    hashlist = []
+    finallist = []
+    for i in range(len(alllist)):
+        reicpelist.append(alllist[i][0])
+        if alllist[i][1] != "":
+            hashlist.append(alllist[i][1])
+        else:
+            hashlist.append("no_tags")
+    for i in range(len(filesinfolder)):
         if i != "recipeindex.txt":
-            recipeindex.write(f"{i}\n")
+            if i in reicpelist:
+                finallist.append([i, hashlist])
     recipeindex.close()
 
 
