@@ -7,15 +7,17 @@ serialn is made using the click module for python.
 All the code is by me. No AI was used in the development of this project.
 
 ## Important things:
-1. Run list_recipes when you first install serialn to create the recipes folder (present in yuor home folder) and recipeindex.txt file.
-    ```
-    list_recipes
-    ```
+1. Run list_recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
+
 2. Don't pass the recipe name as [RECIPENAME].txt in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
+
+3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
+
+4. The recipe files itself are stored in the recipes folder present in your home folder.
 
 
 ## Current commands:
-1. Lists all recipes present in the recipeindex.txt file. If the recipeindex.txt file or the recipes folder is not present, it creates them. Run this command when you first install serialn.
+1. Lists all recipes present in the recipeindex.csv file. If the recipeindex.csv file or the recipes folder is not present, it creates them. Run this command when you first install serialn.
     ```
     list_recipes
     ```
