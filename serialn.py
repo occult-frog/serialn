@@ -172,9 +172,9 @@ def add_recipe(recipename):
 @click.argument("recipename", required=True)
 def remove_recipe(recipename):
     recipefolder = Path.home() / "recipes"
-    if recipefolder.exists() and (recipefolder / "recipeindex.txt").exists():
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
         if (recipefolder / f"{recipename}.txt").exists():
-            confirmation = input(f"u sure you wanna remove {recipename}? (y/N): ")
+            confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
             if confirmation == "y":
                 (recipefolder / f"{recipename}.txt").unlink()
                 click.echo("recipe removed :)")
@@ -182,6 +182,28 @@ def remove_recipe(recipename):
         else:
             click.echo(f"recipe with the name {recipename} doesnt exists :P\n"
                        f"try typing the recipe name without the .txt extension")
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"list_recipes\" to create them")
+
+
+@click.command()
+@click.argument("tags", default="no_tags", required=False)
+def search_tags(tags):
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
+        recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+        reader = list(csv.reader(recipeindex))
+        taglist = []
+        recipelist = []
+        for i in reader:
+            recipelist.append(i[0])
+            taglist.append(i[1])
+        click.echo("recipes with the given tags:")
+        for i in range(len(taglist)):
+            if tags in taglist[i]:
+                click.echo(f"{recipelist[i]} ---- {taglist[i]}")
+        recipeindex.close()
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")

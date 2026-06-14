@@ -15,6 +15,8 @@ All the code is by me. No AI was used in the development of this project.
 
 4. The recipe files itself are stored in the recipes folder present in your home folder.
 
+5. It's best to give the tags argument with a (#) for the search_tags command.
+
 
 ## Current commands:
 1. Lists all recipes present in the recipeindex.csv file. If the recipeindex.csv file or the recipes folder is not present, it creates them. Run this command when you first install serialn.
@@ -36,4 +38,8 @@ All the code is by me. No AI was used in the development of this project.
 5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension.
     ```
     remove_recipe [RECIPENAME]
+    ```
+6. Searches through the recipe index for all recipes with the given tag. Leave the tags argument blank to search for recipes with no tags. It's best to give the tags argument with a #.
+    ```
+    search_tags [TAGS]
     ```
