@@ -15,7 +15,7 @@ All the code is by me. No AI was used in the development of this project.
 
 4. The recipe files itself are stored in the recipes folder present in your home folder.
 
-5. It's best to give the tags argument with a (#) for the search_tags command.
+5. It's best to pass the tags argument with a (#) for the search_tags command.
 
 
 ## Current commands:
@@ -39,7 +39,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     remove_recipe [RECIPENAME]
     ```
-6. Searches through the recipe index for all recipes with the given tag. Leave the tags argument blank to search for recipes with no tags. It's best to give the tags argument with a #.
+6. Searches through the recipe index for all recipes with the given tag. Leave the tags argument blank to search for recipes with no tags. It's best to pass the tags argument with a #.
     ```
     search_tags [TAGS]
     ```
