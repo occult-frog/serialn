@@ -229,41 +229,17 @@ def add_tags(recipename, tags, overwrite):
         name = f"{recipename}.txt"
         if name in recipelist:
             i = recipelist.index(name)
-
-            if not overwrite or overwrite:
-                if not overwrite and tags != "no_tags":
-                    taglist[i] = f"{taglist[i]}{tags}"
-                elif overwrite:
-                    taglist[i] = tags
-
-                recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
-                recipeindexlist = []
-                writer = csv.writer(recipeindex)
-                for i in recipelist:
-                    index = recipelist.index(i)
-                    recipeindexlist.append([i, taglist[index]])
-                writer.writerows(recipeindexlist)
-                recipeindex.close()
-
-                recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
-                filelist = list(csv.reader(recipeindex))
-                click.echo(filelist)
-                click.echo("recipes:")
-                for i in filelist:
-                    if (recipefolder / i[0]).exists():
-                        click.echo(f"{i[0]} ---- {i[1]}: found :)")
-                    else:
-                        click.echo(f"{i[0]} ---- {i[1]}: not found :(")
-
+            if not overwrite and tags != "no_tags":
+                taglist[i] = f"{taglist[i]}{tags}"
+                updateTags(recipelist, taglist)
+            elif not overwrite and tags == "no_tags":
+                click.echo("no tags were given to add :(")
             elif overwrite:
                 taglist[i] = tags
-
-            if not overwrite and tags == "no_tags":
-                click.echo("no tags were given to add :(")
-            recipeindex.close()
+                updateTags(recipelist, taglist)
         else:
-            click.echo(f"recipe with the name {recipename} doesnt exists :P\n"
-                       f"try typing the recipe name without the .txt extension")
+            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
+                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -304,3 +280,26 @@ def ordinalNumber(i):
     elif i == 2: return "nd"
     elif i == 3: return "rd"
     else: return "th"
+
+
+def updateTags(recipelist, taglist):
+    recipefolder = Path.home() / "recipes"
+
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+    writer = csv.writer(recipeindex)
+    recipeindexlist = []
+    for i in recipelist:
+        index = recipelist.index(i)
+        recipeindexlist.append([i, taglist[index]])
+    writer.writerows(recipeindexlist)
+    recipeindex.close()
+
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+    filelist = list(csv.reader(recipeindex))
+    recipeindex.close()
+    click.echo("recipes:")
+    for i in filelist:
+        if (recipefolder / i[0]).exists():
+            click.echo(f"{i[0]} ---- {i[1]}: found :)")
+        else:
+            click.echo(f"{i[0]} ---- {i[1]}: not found :(")

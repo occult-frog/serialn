@@ -15,7 +15,7 @@ All the code is by me. No AI was used in the development of this project.
 
 4. The recipe files itself are stored in the recipes folder present in your home folder.
 
-5. It's best to pass the tags argument with a (#) for the search_tags command.
+5. It's best to pass the tags argument with a (#) for the search_tags and add_tags commands.
 
 
 ## Current commands:
@@ -42,4 +42,8 @@ All the code is by me. No AI was used in the development of this project.
 6. Searches through the recipe index for all recipes with the given tag. Leave the tags argument blank to search for recipes with no tags. It's best to pass the tags argument with a #.
     ```
     search_tags [TAGS]
+    ```
+7. Appends to or overwrites the tags for a given recipe. Leave tags argument blank to assign an empty tag to recipe. -o or --overwrite can be passed as options to overwrite the current tags. It's best to pass the tags argument with a #.
+    ```
+    add_tags [OPTIONS] [RECIPENAME] [TAGS]
     ```
