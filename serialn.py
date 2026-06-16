@@ -1,3 +1,5 @@
+from email.policy import default
+
 import click
 import csv
 from pathlib import Path
@@ -209,6 +211,41 @@ def search_tags(tags):
                    "run \"list_recipes\" to create them")
 
 
+@click.command()
+@click.argument("recipename", required=True)
+@click.argument("tags", default="no_tags", required=False)
+@click.option("--overwrite", "-o", is_flag=True, required=False)
+def add_tags(recipename, tags, overwrite):
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
+        recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+        reader = list(csv.reader(recipeindex))
+        taglist = []
+        recipelist = []
+        for i in reader:
+            recipelist.append(i[0])
+            taglist.append(i[1])
+        recipeindex.close()
+        if recipename in recipelist:
+            recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+            i = recipelist.index(recipename)
+            if not overwrite and tags != "no_tags":
+                taglist[i] = f"{taglist[i]}{tags}"
+                updateTags(recipeindex, recipelist, taglist)
+            elif overwrite:
+                taglist[i] = tags
+                updateTags(recipeindex, recipelist, taglist)
+            elif not overwrite and tags == "no_tags":
+                click.echo("no tags were given to add :(")
+            recipeindex.close()
+        else:
+            click.echo(f"recipe with the name {recipename} doesnt exists :P\n"
+                       f"try typing the recipe name without the .txt extension")
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"list_recipes\" to create them")
+
+
 def refreshIndex(recipefolder):
     filesinfolder = []
     alltxtfiles = list(recipefolder.glob("*.txt"))
@@ -244,3 +281,12 @@ def ordinalNumber(i):
     elif i == 2: return "nd"
     elif i == 3: return "rd"
     else: return "th"
+
+
+def updateTags(recipeindex, recipelist, taglist):
+    recipeindexlist = []
+    writer = csv.writer(recipeindex)
+    for i in recipelist:
+        index = recipelist.index(i)
+        recipeindexlist.append([i, taglist[index]])
+    writer.writerows(recipeindexlist)

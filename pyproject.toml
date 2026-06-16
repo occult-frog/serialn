@@ -13,6 +13,7 @@ refresh_recipes = "serialn:refresh_recipes"
 add_recipe = "serialn:add_recipe"
 remove_recipe = "serialn:remove_recipe"
 search_tags = "serialn:search_tags"
+add_tags = "serialn:add_tags"
 
 [build-system]
 requires = ["flit_core<4"]
