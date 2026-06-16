@@ -1,5 +1,3 @@
-from email.policy import default
-
 import click
 import csv
 from pathlib import Path
@@ -48,12 +46,12 @@ def view_recipe(recipename):
     recipefolder = Path.home()/"recipes"
 
     if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
-        if (recipefolder / f"{recipename}.txt").exists():
+        if checkRecipeExistence(recipename):
             recipefile = open(recipefolder/f"{recipename}.txt", "r")
             click.echo(recipefile.read())
         else:
-            click.echo(f"recipe with the name {recipename} does not exist :(\n"
-                       f"try typing the recipe name without the .txt extension")
+            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
+                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -175,15 +173,15 @@ def add_recipe(recipename):
 def remove_recipe(recipename):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if (recipefolder / f"{recipename}.txt").exists():
+        if checkRecipeExistence(recipename):
             confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
             if confirmation == "y":
                 (recipefolder / f"{recipename}.txt").unlink()
                 click.echo("recipe removed :)")
                 refreshIndex(recipefolder)
         else:
-            click.echo(f"recipe with the name {recipename} doesnt exists :P\n"
-                       f"try typing the recipe name without the .txt extension")
+            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
+                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -218,16 +216,16 @@ def search_tags(tags):
 def add_tags(recipename, tags, overwrite):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
-        reader = list(csv.reader(recipeindex))
-        taglist = []
-        recipelist = []
-        for i in reader:
-            recipelist.append(i[0])
-            taglist.append(i[1])
-        recipeindex.close()
-        name = f"{recipename}.txt"
-        if name in recipelist:
+        if checkRecipeExistence(recipename):
+            recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+            reader = list(csv.reader(recipeindex))
+            taglist = []
+            recipelist = []
+            for i in reader:
+                recipelist.append(i[0])
+                taglist.append(i[1])
+            recipeindex.close()
+            name = f"{recipename}.txt"
             i = recipelist.index(name)
             if not overwrite and tags != "no_tags":
                 taglist[i] = f"{taglist[i]}{tags}"
@@ -303,3 +301,18 @@ def updateTags(recipelist, taglist):
             click.echo(f"{i[0]} ---- {i[1]}: found :)")
         else:
             click.echo(f"{i[0]} ---- {i[1]}: not found :(")
+
+
+def checkRecipeExistence(recipename):
+    recipefolder = Path.home() / "recipes"
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+    reader = list(csv.reader(recipeindex))
+    recipelist = []
+    for i in reader:
+        recipelist.append(i[0])
+    recipeindex.close()
+    name = f"{recipename}.txt"
+    if name in recipelist:
+        return True
+    else:
+        return False
