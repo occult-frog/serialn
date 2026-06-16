@@ -226,16 +226,39 @@ def add_tags(recipename, tags, overwrite):
             recipelist.append(i[0])
             taglist.append(i[1])
         recipeindex.close()
-        if recipename in recipelist:
-            recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
-            i = recipelist.index(recipename)
-            if not overwrite and tags != "no_tags":
-                taglist[i] = f"{taglist[i]}{tags}"
-                updateTags(recipeindex, recipelist, taglist)
+        name = f"{recipename}.txt"
+        if name in recipelist:
+            i = recipelist.index(name)
+
+            if not overwrite or overwrite:
+                if not overwrite and tags != "no_tags":
+                    taglist[i] = f"{taglist[i]}{tags}"
+                elif overwrite:
+                    taglist[i] = tags
+
+                recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
+                recipeindexlist = []
+                writer = csv.writer(recipeindex)
+                for i in recipelist:
+                    index = recipelist.index(i)
+                    recipeindexlist.append([i, taglist[index]])
+                writer.writerows(recipeindexlist)
+                recipeindex.close()
+
+                recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+                filelist = list(csv.reader(recipeindex))
+                click.echo(filelist)
+                click.echo("recipes:")
+                for i in filelist:
+                    if (recipefolder / i[0]).exists():
+                        click.echo(f"{i[0]} ---- {i[1]}: found :)")
+                    else:
+                        click.echo(f"{i[0]} ---- {i[1]}: not found :(")
+
             elif overwrite:
                 taglist[i] = tags
-                updateTags(recipeindex, recipelist, taglist)
-            elif not overwrite and tags == "no_tags":
+
+            if not overwrite and tags == "no_tags":
                 click.echo("no tags were given to add :(")
             recipeindex.close()
         else:
@@ -281,12 +304,3 @@ def ordinalNumber(i):
     elif i == 2: return "nd"
     elif i == 3: return "rd"
     else: return "th"
-
-
-def updateTags(recipeindex, recipelist, taglist):
-    recipeindexlist = []
-    writer = csv.writer(recipeindex)
-    for i in recipelist:
-        index = recipelist.index(i)
-        recipeindexlist.append([i, taglist[index]])
-    writer.writerows(recipeindexlist)
