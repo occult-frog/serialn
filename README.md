@@ -11,7 +11,7 @@ All the code is by me. No AI was used in the development of this project.
 
 2. Don't pass the recipe name as [RECIPENAME].txt in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
 
-3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
+3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain. Recipes are stored in the form of .txt files.
 
 4. The recipe files itself are stored in the recipes folder present in your home folder.
 
@@ -23,7 +23,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     list-recipes
     ```
-2. Allows you to view a recipe. You need to pass the required recipe's name as the RECIPENAME argument to view that recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension.
+2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe.
     ```
     view-recipe [RECIPENAME]
     ```

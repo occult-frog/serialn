@@ -1,10 +1,11 @@
-import click
 import csv
 from pathlib import Path
+import click
+
 
 @click.command()
 def hi():
-    click.echo("hi")
+    click.echo("hello")
 
 
 @click.command()
@@ -41,14 +42,29 @@ def list_recipes():
 
 
 @click.command()
-@click.argument('recipename', required=True)
+@click.argument('recipename', required=False, default=None)
 def view_recipe(recipename):
     recipefolder = Path.home()/"recipes"
 
     if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
-        if checkRecipeExistence(recipename):
+        if recipename is None:
+            recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+            filelist = list(csv.reader(recipeindex))
+            recipeindex.close()
+            click.echo("recipes:")
+            for i in filelist:
+                if (recipefolder / i[0]).exists():
+                    j = filelist.index(i)
+                    click.echo(f"{i[0]} ---- {i[1]} ---- {j}")
+            q = int(input("choose recipe: "))
+            if q <= len(filelist):
+                recipefile = open(f"{recipefolder}/{filelist[q][0]}", "r")
+                click.echo(recipefile.read())
+                recipefile.close()
+        elif checkRecipeExistence(recipename):
             recipefile = open(recipefolder/f"{recipename}.txt", "r")
             click.echo(recipefile.read())
+            recipefile.close()
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
                        f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
@@ -143,8 +159,6 @@ def add_recipe(recipename):
                 recipe += "".join("\nExtra notes:\n")
                 for i in range(len(extranotes)):
                     recipe += "".join(f"{i + 1}. {extranotes[i]}")
-            if tagsquestion == "y":
-                recipe += "".join(f"\nTags:{tags}")
             click.echo(recipe)
 
             confirmrecipe = input("confirm recipe? (y/N): ")
