@@ -93,7 +93,7 @@ def refresh_recipes():
 def add_recipe(recipename):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if (recipefolder/f"{recipename}.txt").exists():
+        if (recipefolder/f"{recipename}.csv").exists():
             click.echo(f"recipe with the name {recipename} already exists :P")
         else:
             ingredientcount = int(input("how many ingredients are there?: "))
@@ -139,7 +139,7 @@ def add_recipe(recipename):
                         else:
                             note = input(f"enter {i}{ordinalsuffix} note: ")
                     m = input("add another note? (y/N): ")
-                    if m == "N" and m != "y":
+                    if m == "N" or m != "y":
                         j = "stop"
                     extranotes.append(f"{note}\n")
 
@@ -178,15 +178,14 @@ def add_recipe(recipename):
                     longestlist = extranotes
 
                 for i in range(len(longestlist)):
-                    for i in recipe2:
-                        j = recipe2.index(i)
-                        if j+1 > len(i):
-                            recipe3[j] = "none"
+                    for j in recipe2:
+                        index = recipe2.index(j)
+                        if i+1 > len(j):
+                            recipe3[index] = "none"
                         else:
-                            recipe3[j] = i[j]
-                        click.echo(recipe3)
+                            recipe3[index] = j[i]
                     recipe1.append([recipe3[0], recipe3[1], recipe3[2]])
-                    click.echo(recipe1)
+
 
                 recipe1[0].append(tags)
                 recipefile = open(f"{recipefolder}/{recipename}.csv", "w")
