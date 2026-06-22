@@ -62,12 +62,45 @@ def view_recipe(recipename):
                 click.echo(recipefile.read())
                 recipefile.close()
         elif checkRecipeExistence(recipename):
-            recipefile = open(recipefolder/f"{recipename}.txt", "r")
-            click.echo(recipefile.read())
+            recipefile = open(recipefolder/f"{recipename}.csv", "r")
+            reader = csv.reader(recipefile)
+            ingredients = []
+            steps = []
+            extranotes = []
+            recipe = ""
+
+            for i in reader:
+                ingredients.append(i[0])
+                steps.append(i[1])
+                extranotes.append(i[2])
+
             recipefile.close()
+
+            recipe = "Ingredients:\n"
+            for i in range(len(ingredients)):
+                if ingredients[i] == "none":
+                    break
+                else:
+                    recipe += "".join(f"{i + 1}. {ingredients[i]}")
+
+            recipe += "".join("\nSteps:\n")
+            for i in range(len(steps)):
+                if steps[i] == "none":
+                    break
+                else:
+                    recipe += "".join(f"{i + 1}. {steps[i]}")
+
+            recipe += "".join("\nExtra notes:\n")
+            for i in range(len(extranotes)):
+                if extranotes[i] == "none":
+                    break
+                else:
+                    recipe += "".join(f"{i + 1}. {extranotes[i]}")
+
+            click.echo(recipe)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -353,7 +386,7 @@ def checkRecipeExistence(recipename):
     for i in reader:
         recipelist.append(i[0])
     recipeindex.close()
-    name = f"{recipename}.txt"
+    name = f"{recipename}.csv"
     if name in recipelist:
         return True
     else:
