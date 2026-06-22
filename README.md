@@ -9,13 +9,15 @@ All the code is by me. No AI was used in the development of this project.
 ## Important things:
 1. Run list_recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
 
-2. Don't pass the recipe name as [RECIPENAME].txt in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
+2. Don't pass the recipe name as [RECIPENAME].csv in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
 
-3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain. Recipes are stored in the form of .txt files.
+3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
 
-4. The recipe files itself are stored in the recipes folder present in your home folder.
+4. Recipes are stored in the form of .csv files. The first column is for ingredients, second for steps, third for extra notes, and the last one for tags.
 
-5. It's best to pass the tags argument with a (#) for the search_tags and add_tags commands.
+5. The recipe files itself are stored in the recipes folder present in your home folder.
+
+6. It's best to pass the tags argument with a (#) for the search_tags and add_tags commands.
 
 
 ## Current commands:
@@ -23,19 +25,19 @@ All the code is by me. No AI was used in the development of this project.
     ```
     list-recipes
     ```
-2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe.
+2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe.
     ```
     view-recipe [RECIPENAME]
     ```
-3. Takes all recipes present in the recipes folder and adds their name to the recipeindex.txt file. This command overwrites all the other recipe names in the recipeindex.txt file.
+3. Takes all recipes present in the recipes folder and adds their name to the recipeindex.csv file. This command overwrites all the other recipe names in the recipeindex.csv file.
     ```
     refresh-recipes
     ```
-4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension.
+4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension.
     ```
     add-recipe [RECIPENAME]
     ```
-5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].txt. Pass it without the extension.
+5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension.
     ```
     remove-recipe [RECIPENAME]
     ```
