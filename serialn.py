@@ -173,6 +173,7 @@ def add_recipe(recipename):
             ingredientcount = int(input("how many ingredients are there?: "))
             stepcount = int(input("how many steps are there?: "))
             ingredients = []
+            ingredientamounts = []
             steps = []
             extranotes = []
             tags = ""
@@ -181,11 +182,15 @@ def add_recipe(recipename):
                 ordinalsuffix = ordinalNumber(i+1)
                 j = "N"
                 ing = input(f"enter name of {i+1}{ordinalsuffix} ingredient: ")
+                ingamount = input(f"enter amount of {ing} required: ")
                 while j != "y":
-                    k = input(f"confirm ingredient? (y/N): ")
+                    k = input(f"confirm ingredient and amount? (y/N): ")
                     if k == "y" and k != "N": j = k
-                    else: ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
-                ingredients.append(f"{ing}\n")
+                    else:
+                        ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
+                        ingamount = input(f"enter amount of {ing} required: ")
+                ingredients.append(f"{ing}")
+                ingredientamounts.append(f"{ingamount}\n")
 
             for i in range(stepcount):
                 ordinalsuffix = ordinalNumber(i+1)
@@ -227,7 +232,7 @@ def add_recipe(recipename):
             click.echo("\n")
             recipe = "Ingredients:\n"
             for i in range(len(ingredients)):
-                recipe += "".join(f"{i + 1}. {ingredients[i]}")
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
             recipe += "".join("\nSteps:\n")
             for i in range(len(steps)):
                 recipe += "".join(f"{i+1}. {steps[i]}")
@@ -242,8 +247,8 @@ def add_recipe(recipename):
             confirmrecipe = input("confirm recipe? (y/N): ")
             if confirmrecipe == "y":
                 recipe1 = []
-                recipe2 = [ingredients, steps, extranotes]
-                recipe3 = ["", "", ""]
+                recipe2 = [ingredients, ingredientamounts, steps, extranotes]
+                recipe3 = ["", "", "", ""]
 
                 longestlist = max(len(ingredients), len(steps), len(extranotes))
                 if longestlist == len(ingredients):
@@ -260,7 +265,7 @@ def add_recipe(recipename):
                             recipe3[index] = "none"
                         else:
                             recipe3[index] = j[i]
-                    recipe1.append([recipe3[0], recipe3[1], recipe3[2]])
+                    recipe1.append([recipe3[0], recipe3[1], recipe3[2], recipe3[3]])
 
 
                 recipe1[0].append(tags)
@@ -381,11 +386,11 @@ def refreshIndex(recipefolder):
         if filesinfolder[i] != "recipeindex.csv":
             if filesinfolder[i] in reicpelist:
                 recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
-                j = recipereader[0][3]
+                j = recipereader[0][4]
                 finallist.append([filesinfolder[i], j])
             else:
                 recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
-                j = recipereader[0][3]
+                j = recipereader[0][4]
                 finallist.append([filesinfolder[i], "no_tags"])
     writer = csv.writer(recipeindex)
     writer.writerows(finallist)
@@ -404,7 +409,7 @@ def updateTags(recipename, tags):
 
     recipefile = open(f"{recipefolder}/{recipename}", "r")
     recipereader = list(csv.reader(recipefile))
-    recipereader[0][3] = tags
+    recipereader[0][4] = tags
     recipefile.close()
 
     recipefile = open(f"{recipefolder}/{recipename}", "w")
