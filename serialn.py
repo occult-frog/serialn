@@ -61,15 +61,17 @@ def view_recipe(recipename):
                 recipefile = open(recipefolder / f"{filelist[q][0]}", "r")
                 reader = list(csv.reader(recipefile))
                 ingredients = []
+                ingredientamounts = []
                 steps = []
                 extranotes = []
-                tags = reader[0][3]
+                tags = reader[0][4]
                 recipe = ""
 
                 for i in reader:
                     ingredients.append(i[0])
-                    steps.append(i[1])
-                    extranotes.append(i[2])
+                    ingredientamounts.append(i[1])
+                    steps.append(i[2])
+                    extranotes.append(i[3])
 
                 recipefile.close()
 
@@ -78,7 +80,7 @@ def view_recipe(recipename):
                     if ingredients[i] == "none":
                         break
                     else:
-                        recipe += "".join(f"{i + 1}. {ingredients[i]}")
+                        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
 
                 recipe += "".join("\nSteps:\n")
                 for i in range(len(steps)):
@@ -102,15 +104,17 @@ def view_recipe(recipename):
             recipefile = open(recipefolder/f"{recipename}.csv", "r")
             reader = list(csv.reader(recipefile))
             ingredients = []
+            ingredientamounts = []
             steps = []
             extranotes = []
-            tags = reader[0][3]
+            tags = reader[0][4]
             recipe = ""
 
             for i in reader:
                 ingredients.append(i[0])
-                steps.append(i[1])
-                extranotes.append(i[2])
+                ingredientamounts.append(i[1])
+                steps.append(i[2])
+                extranotes.append(i[3])
 
             recipefile.close()
 
@@ -119,7 +123,7 @@ def view_recipe(recipename):
                 if ingredients[i] == "none":
                     break
                 else:
-                    recipe += "".join(f"{i + 1}. {ingredients[i]}")
+                    recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
 
             recipe += "".join("\nSteps:\n")
             for i in range(len(steps)):
@@ -141,10 +145,10 @@ def view_recipe(recipename):
             click.echo(recipe)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 @click.command()
@@ -159,7 +163,7 @@ def refresh_recipes():
             click.echo(f"{i[0]} ----- {i[1]}")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 @click.command()
@@ -288,7 +292,7 @@ def add_recipe(recipename):
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 @click.command()
@@ -304,10 +308,10 @@ def remove_recipe(recipename):
                 refreshIndex(recipefolder)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 @click.command()
@@ -329,7 +333,7 @@ def search_tags(tags):
         recipeindex.close()
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 @click.command()
@@ -358,10 +362,10 @@ def add_tags(recipename, tags, overwrite):
                 updateTags(name, tags)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
-                   "run \"list_recipes\" to create them")
+                   "run \"list-recipes\" to create them")
 
 
 def refreshIndex(recipefolder):
@@ -384,14 +388,9 @@ def refreshIndex(recipefolder):
     recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
     for i in range(len(filesinfolder)):
         if filesinfolder[i] != "recipeindex.csv":
-            if filesinfolder[i] in reicpelist:
-                recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
-                j = recipereader[0][4]
-                finallist.append([filesinfolder[i], j])
-            else:
-                recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
-                j = recipereader[0][4]
-                finallist.append([filesinfolder[i], "no_tags"])
+            recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
+            j = recipereader[0][4]
+            finallist.append([filesinfolder[i], j])
     writer = csv.writer(recipeindex)
     writer.writerows(finallist)
     recipeindex.close()
