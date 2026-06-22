@@ -13,7 +13,7 @@ All the code is by me. No AI was used in the development of this project.
 
 3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
 
-4. Recipes are stored in the form of .csv files. The first column is for ingredients, second for steps, third for extra notes, and the last one for tags.
+4. Recipes are stored in the form of .csv files. The first column is for ingredients, second for ingredient amounts, third for steps, fourth for extra notes, and fifth for tags.
 
 5. The recipe files itself are stored in the recipes folder present in your home folder.
 
