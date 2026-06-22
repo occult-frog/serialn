@@ -251,12 +251,12 @@ def remove_recipe(recipename):
         if checkRecipeExistence(recipename):
             confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
             if confirmation == "y":
-                (recipefolder / f"{recipename}.txt").unlink()
+                (recipefolder / f"{recipename}.csv").unlink()
                 click.echo("recipe removed :)")
                 refreshIndex(recipefolder)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -312,7 +312,7 @@ def add_tags(recipename, tags, overwrite):
                 updateTags(recipelist, taglist)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .txt extension or running \"refresh_recipes\"")
+                       f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list_recipes\" to create them")
@@ -320,7 +320,7 @@ def add_tags(recipename, tags, overwrite):
 
 def refreshIndex(recipefolder):
     filesinfolder = []
-    alltxtfiles = list(recipefolder.glob("*.txt"))
+    alltxtfiles = list(recipefolder.glob("*.csv"))
     for i in alltxtfiles:
         filesinfolder.append(f"{i}".removeprefix(f"{recipefolder}/"))
     recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
@@ -337,7 +337,7 @@ def refreshIndex(recipefolder):
     recipeindex.close()
     recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
     for i in range(len(filesinfolder)):
-        if filesinfolder[i] != "recipeindex.txt":
+        if filesinfolder[i] != "recipeindex.csv":
             if filesinfolder[i] in reicpelist:
                 j = reicpelist.index(filesinfolder[i])
                 finallist.append([filesinfolder[i], hashlist[j]])
