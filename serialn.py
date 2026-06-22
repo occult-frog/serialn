@@ -57,16 +57,54 @@ def view_recipe(recipename):
                     j = filelist.index(i)
                     click.echo(f"{i[0]} ---- {i[1]} ---- {j}")
             q = int(input("choose recipe: "))
-            if q <= len(filelist):
-                recipefile = open(f"{recipefolder}/{filelist[q][0]}", "r")
-                click.echo(recipefile.read())
+            if q < len(filelist):
+                recipefile = open(recipefolder / f"{filelist[q][0]}", "r")
+                reader = list(csv.reader(recipefile))
+                ingredients = []
+                steps = []
+                extranotes = []
+                tags = reader[0][3]
+                recipe = ""
+
+                for i in reader:
+                    ingredients.append(i[0])
+                    steps.append(i[1])
+                    extranotes.append(i[2])
+
                 recipefile.close()
+
+                recipe = "Ingredients:\n"
+                for i in range(len(ingredients)):
+                    if ingredients[i] == "none":
+                        break
+                    else:
+                        recipe += "".join(f"{i + 1}. {ingredients[i]}")
+
+                recipe += "".join("\nSteps:\n")
+                for i in range(len(steps)):
+                    if steps[i] == "none":
+                        break
+                    else:
+                        recipe += "".join(f"{i + 1}. {steps[i]}")
+
+                recipe += "".join("\nExtra notes:\n")
+                for i in range(len(extranotes)):
+                    if extranotes[i] == "none":
+                        break
+                    else:
+                        recipe += "".join(f"{i + 1}. {extranotes[i]}")
+
+                recipe += "".join("\nTags:\n")
+                recipe += "".join(f"{tags}")
+
+                click.echo(recipe)
         elif checkRecipeExistence(recipename):
             recipefile = open(recipefolder/f"{recipename}.csv", "r")
-            reader = csv.reader(recipefile)
+            reader = list(csv.reader(recipefile))
             ingredients = []
             steps = []
             extranotes = []
+            tags = reader[0][3]
             recipe = ""
 
             for i in reader:
@@ -96,6 +134,9 @@ def view_recipe(recipename):
                     break
                 else:
                     recipe += "".join(f"{i + 1}. {extranotes[i]}")
+
+            recipe += "".join("\nTags:\n")
+            recipe += "".join(f"{tags}")
 
             click.echo(recipe)
         else:
@@ -194,6 +235,8 @@ def add_recipe(recipename):
                 recipe += "".join("\nExtra notes:\n")
                 for i in range(len(extranotes)):
                     recipe += "".join(f"{i + 1}. {extranotes[i]}")
+            recipe += "".join("\nTags:\n")
+            recipe += "".join(f"{tags}")
             click.echo(recipe)
 
             confirmrecipe = input("confirm recipe? (y/N): ")
@@ -300,16 +343,14 @@ def add_tags(recipename, tags, overwrite):
                 recipelist.append(i[0])
                 taglist.append(i[1])
             recipeindex.close()
-            name = f"{recipename}.txt"
+            name = f"{recipename}.csv"
             i = recipelist.index(name)
             if not overwrite and tags != "no_tags":
-                taglist[i] = f"{taglist[i]}{tags}"
-                updateTags(recipelist, taglist)
+                updateTags(name, f"{taglist[i]}{tags}")
             elif not overwrite and tags == "no_tags":
                 click.echo("no tags were given to add :(")
             elif overwrite:
-                taglist[i] = tags
-                updateTags(recipelist, taglist)
+                updateTags(name, tags)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
                        f"try typing the recipe name without the .csv extension or running \"refresh_recipes\"")
@@ -339,9 +380,12 @@ def refreshIndex(recipefolder):
     for i in range(len(filesinfolder)):
         if filesinfolder[i] != "recipeindex.csv":
             if filesinfolder[i] in reicpelist:
-                j = reicpelist.index(filesinfolder[i])
-                finallist.append([filesinfolder[i], hashlist[j]])
+                recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
+                j = recipereader[0][3]
+                finallist.append([filesinfolder[i], j])
             else:
+                recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
+                j = recipereader[0][3]
                 finallist.append([filesinfolder[i], "no_tags"])
     writer = csv.writer(recipeindex)
     writer.writerows(finallist)
@@ -355,17 +399,20 @@ def ordinalNumber(i):
     else: return "th"
 
 
-def updateTags(recipelist, taglist):
+def updateTags(recipename, tags):
     recipefolder = Path.home() / "recipes"
 
-    recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
-    writer = csv.writer(recipeindex)
-    recipeindexlist = []
-    for i in recipelist:
-        index = recipelist.index(i)
-        recipeindexlist.append([i, taglist[index]])
-    writer.writerows(recipeindexlist)
-    recipeindex.close()
+    recipefile = open(f"{recipefolder}/{recipename}", "r")
+    recipereader = list(csv.reader(recipefile))
+    recipereader[0][3] = tags
+    recipefile.close()
+
+    recipefile = open(f"{recipefolder}/{recipename}", "w")
+    recipewriter = csv.writer(recipefile)
+    recipewriter.writerows(recipereader)
+    recipefile.close()
+
+    refreshIndex(recipefolder)
 
     recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
     filelist = list(csv.reader(recipeindex))
