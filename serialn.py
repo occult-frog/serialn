@@ -147,6 +147,8 @@ def add_recipe(recipename):
             tagsquestion = input("do you want to add any tags? (y/N): ")
             if tagsquestion == "y":
                 tags = input(f"enter all the tags(with the #): ")
+            else:
+                tags = "no_tags"
 
             click.echo("\n")
             recipe = "Ingredients:\n"
@@ -163,13 +165,40 @@ def add_recipe(recipename):
 
             confirmrecipe = input("confirm recipe? (y/N): ")
             if confirmrecipe == "y":
-                recipefile = open(f"{recipefolder}/{recipename}.txt", "w")
-                recipefile.write(recipe)
+                recipe1 = []
+                recipe2 = [ingredients, steps, extranotes]
+                recipe3 = ["", "", ""]
+
+                longestlist = max(len(ingredients), len(steps), len(extranotes))
+                if longestlist == len(ingredients):
+                    longestlist = ingredients
+                elif longestlist == len(steps):
+                    longestlist = steps
+                elif longestlist == len(extranotes):
+                    longestlist = extranotes
+
+                for i in range(len(longestlist)):
+                    for i in recipe2:
+                        j = recipe2.index(i)
+                        if j+1 > len(i):
+                            recipe3[j] = "none"
+                        else:
+                            recipe3[j] = i[j]
+                        click.echo(recipe3)
+                    recipe1.append([recipe3[0], recipe3[1], recipe3[2]])
+                    click.echo(recipe1)
+
+                recipe1[0].append(tags)
+                recipefile = open(f"{recipefolder}/{recipename}.csv", "w")
+                writer = csv.writer(recipefile)
+                writer.writerows(recipe1)
                 recipefile.close()
                 click.echo("recipe saved :)")
+
                 recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
                 recipelist = list(csv.reader(recipeindex))
                 recipeindex.close()
+
                 recipebutinlist = [f"{recipename}.txt", tags]
                 recipelist.append(recipebutinlist)
                 recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
