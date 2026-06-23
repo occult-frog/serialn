@@ -43,7 +43,8 @@ def list_recipes():
 
 @click.command()
 @click.argument('recipename', required=False, default=None)
-def view_recipe(recipename):
+@click.argument('scale', required=False, default=1, type=float)
+def view_recipe(recipename, scale):
     recipefolder = Path.home()/"recipes"
 
     if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
@@ -56,93 +57,14 @@ def view_recipe(recipename):
                 if (recipefolder / i[0]).exists():
                     j = filelist.index(i)
                     click.echo(f"{i[0]} ---- {i[1]} ---- {j}")
+
             q = int(input("choose recipe: "))
             if q < len(filelist):
-                recipefile = open(recipefolder / f"{filelist[q][0]}", "r")
-                reader = list(csv.reader(recipefile))
-                ingredients = []
-                ingredientamounts = []
-                steps = []
-                extranotes = []
-                tags = reader[0][4]
-                recipe = ""
+                printRecipe(recipefolder, filelist[q][0])
 
-                for i in reader:
-                    ingredients.append(i[0])
-                    ingredientamounts.append(i[1])
-                    steps.append(i[2])
-                    extranotes.append(i[3])
-
-                recipefile.close()
-
-                recipe = "Ingredients:\n"
-                for i in range(len(ingredients)):
-                    if ingredients[i] == "none":
-                        break
-                    else:
-                        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
-
-                recipe += "".join("\nSteps:\n")
-                for i in range(len(steps)):
-                    if steps[i] == "none":
-                        break
-                    else:
-                        recipe += "".join(f"{i + 1}. {steps[i]}")
-
-                recipe += "".join("\nExtra notes:\n")
-                for i in range(len(extranotes)):
-                    if extranotes[i] == "none":
-                        break
-                    else:
-                        recipe += "".join(f"{i + 1}. {extranotes[i]}")
-
-                recipe += "".join("\nTags:\n")
-                recipe += "".join(f"{tags}")
-
-                click.echo(recipe)
         elif checkRecipeExistence(recipename):
-            recipefile = open(recipefolder/f"{recipename}.csv", "r")
-            reader = list(csv.reader(recipefile))
-            ingredients = []
-            ingredientamounts = []
-            steps = []
-            extranotes = []
-            tags = reader[0][4]
-            recipe = ""
+            printRecipe(recipefolder, f"{recipename}.csv")
 
-            for i in reader:
-                ingredients.append(i[0])
-                ingredientamounts.append(i[1])
-                steps.append(i[2])
-                extranotes.append(i[3])
-
-            recipefile.close()
-
-            recipe = "Ingredients:\n"
-            for i in range(len(ingredients)):
-                if ingredients[i] == "none":
-                    break
-                else:
-                    recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
-
-            recipe += "".join("\nSteps:\n")
-            for i in range(len(steps)):
-                if steps[i] == "none":
-                    break
-                else:
-                    recipe += "".join(f"{i + 1}. {steps[i]}")
-
-            recipe += "".join("\nExtra notes:\n")
-            for i in range(len(extranotes)):
-                if extranotes[i] == "none":
-                    break
-                else:
-                    recipe += "".join(f"{i + 1}. {extranotes[i]}")
-
-            recipe += "".join("\nTags:\n")
-            recipe += "".join(f"{tags}")
-
-            click.echo(recipe)
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
                        f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
@@ -209,7 +131,7 @@ def add_recipe(recipename):
                     a = ingamount[:index].strip()
                     b = ingamount[index:].strip()
                 ingredientamounts.append(f"{a}")
-                ingredientunits.append(f"{b}\n")
+                ingredientunits.append(f"{b}")
 
             for i in range(stepcount):
                 ordinalsuffix = ordinalNumber(i+1)
@@ -219,7 +141,7 @@ def add_recipe(recipename):
                     k = input(f"confirm step? (y/N): ")
                     if k == "y" and k != "N": j = k
                     else: step = input(f"enter {i+1}{ordinalsuffix} step: ")
-                steps.append(f"{step}\n")
+                steps.append(f"{step}")
 
             j = "N"
             extranotesquestion = input("do you want to add any extra notes? (y/N): ")
@@ -239,7 +161,7 @@ def add_recipe(recipename):
                     m = input("add another note? (y/N): ")
                     if m == "N" or m != "y":
                         j = "stop"
-                    extranotes.append(f"{note}\n")
+                    extranotes.append(f"{note}")
 
             j = "N"
             tagsquestion = input("do you want to add any tags? (y/N): ")
@@ -251,17 +173,24 @@ def add_recipe(recipename):
             click.echo("\n")
             recipe = "Ingredients:\n"
             for i in range(len(ingredients)):
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}")
+                if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
+                    recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+                elif ingredientunits[i] == "no_unit":
+                    recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}\n")
+                elif ingredientamounts[i] == "no_amount":
+                    recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+                else:
+                    recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}\n")
 
             recipe += "".join("\nSteps:\n")
             for i in range(len(steps)):
-                recipe += "".join(f"{i+1}. {steps[i]}")
+                recipe += "".join(f"{i+1}. {steps[i]}\n")
             if extranotesquestion == "y":
                 recipe += "".join("\nExtra notes:\n")
                 for i in range(len(extranotes)):
-                    recipe += "".join(f"{i + 1}. {extranotes[i]}")
+                    recipe += "".join(f"{i + 1}. {extranotes[i]}\n")
             recipe += "".join("\nTags:\n")
-            recipe += "".join(f"{tags}")
+            recipe += "".join(f"{tags}\n")
             click.echo(recipe)
 
             confirmrecipe = input("confirm recipe? (y/N): ")
@@ -389,23 +318,12 @@ def refreshIndex(recipefolder):
     alltxtfiles = list(recipefolder.glob("*.csv"))
     for i in alltxtfiles:
         filesinfolder.append(f"{i}".removeprefix(f"{recipefolder}/"))
-    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
-    alllist = list(csv.reader(recipeindex))
-    reicpelist = []
-    hashlist = []
     finallist = []
-    for i in range(len(alllist)):
-        reicpelist.append(alllist[i][0])
-        if alllist[i][1] != "":
-            hashlist.append(alllist[i][1])
-        else:
-            hashlist.append("no_tags")
-    recipeindex.close()
     recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
     for i in range(len(filesinfolder)):
         if filesinfolder[i] != "recipeindex.csv":
             recipereader = list(csv.reader(open(f"{recipefolder}/{filesinfolder[i]}", "r")))
-            j = recipereader[0][4]
+            j = recipereader[0][5]
             finallist.append([filesinfolder[i], j])
     writer = csv.writer(recipeindex)
     writer.writerows(finallist)
@@ -424,7 +342,7 @@ def updateTags(recipename, tags):
 
     recipefile = open(f"{recipefolder}/{recipename}", "r")
     recipereader = list(csv.reader(recipefile))
-    recipereader[0][4] = tags
+    recipereader[0][5] = tags
     recipefile.close()
 
     recipefile = open(f"{recipefolder}/{recipename}", "w")
@@ -458,3 +376,68 @@ def checkRecipeExistence(recipename):
         return True
     else:
         return False
+
+
+def somethingAmountUnit(ingredients, ingredientamounts, ingredientunits, i, recipe):
+    if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
+        recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+    elif ingredientunits[i] == "no_unit":
+        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}\n")
+    elif ingredientamounts[i] == "no_amount":
+        recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+    else:
+        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}")
+
+
+def printRecipe(recipefolder, file):
+    recipefile = open(recipefolder / f"{file}", "r")
+    reader = list(csv.reader(recipefile))
+    ingredients = []
+    ingredientamounts = []
+    ingredientunits = []
+    steps = []
+    extranotes = []
+    tags = reader[0][5]
+    recipe = ""
+
+    for i in reader:
+        ingredients.append(i[0])
+        ingredientamounts.append(i[1])
+        ingredientunits.append(i[2])
+        steps.append(i[3])
+        extranotes.append(i[4])
+
+    recipefile.close()
+
+    recipe = "Ingredients:\n"
+    for i in range(len(ingredients)):
+        if ingredients[i] == "none":
+            break
+        else:
+            if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
+                recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+            elif ingredientunits[i] == "no_unit":
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}\n")
+            elif ingredientamounts[i] == "no_amount":
+                recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+            else:
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}\n")
+
+    recipe += "".join("\nSteps:\n")
+    for i in range(len(steps)):
+        if steps[i] == "none":
+            break
+        else:
+            recipe += "".join(f"{i + 1}. {steps[i]}\n")
+
+    recipe += "".join("\nExtra notes:\n")
+    for i in range(len(extranotes)):
+        if extranotes[i] == "none":
+            break
+        else:
+            recipe += "".join(f"{i + 1}. {extranotes[i]}\n")
+
+    recipe += "".join("\nTags:\n")
+    recipe += "".join(f"{tags}\n")
+
+    click.echo(recipe)
