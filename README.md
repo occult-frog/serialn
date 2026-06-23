@@ -13,11 +13,13 @@ All the code is by me. No AI was used in the development of this project.
 
 3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
 
-4. Recipes are stored in the form of .csv files. The first column is for ingredients, second for ingredient amounts, third for steps, fourth for extra notes, and fifth for tags.
+4. Recipes are stored in the form of .csv files. The first column is for ingredients, second for ingredient amounts, third for the unit, fourth for steps, fifth for extra notes, and sixth for tags.
 
 5. The recipe files itself are stored in the recipes folder present in your home folder.
 
 6. It's best to pass the tags argument with a (#) for the search_tags and add_tags commands.
+
+7. When entering the recipe amount in add-recipe, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
 
 
 ## Current commands:
@@ -25,15 +27,15 @@ All the code is by me. No AI was used in the development of this project.
     ```
     list-recipes
     ```
-2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe.
+2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe. Pass --scale or -s and then a number to scale it by that. The default sclae is 1.
     ```
-    view-recipe [RECIPENAME]
+    view-recipe [RECIPENAME] [OPTIONS]
     ```
 3. Takes all recipes present in the recipes folder and adds their name to the recipeindex.csv file. This command overwrites all the other recipe names in the recipeindex.csv file.
     ```
     refresh-recipes
     ```
-4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension.
+4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. When entering the recipe amount, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
     ```
     add-recipe [RECIPENAME]
     ```

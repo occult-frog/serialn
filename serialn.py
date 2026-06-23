@@ -43,7 +43,7 @@ def list_recipes():
 
 @click.command()
 @click.argument('recipename', required=False, default=None)
-@click.argument('scale', required=False, default=1, type=float)
+@click.option('--scale', '-s', required=False, default=1.0, type=float)
 def view_recipe(recipename, scale):
     recipefolder = Path.home()/"recipes"
 
@@ -60,10 +60,10 @@ def view_recipe(recipename, scale):
 
             q = int(input("choose recipe: "))
             if q < len(filelist):
-                printRecipe(recipefolder, filelist[q][0])
+                printRecipe(recipefolder, filelist[q][0], scale)
 
         elif checkRecipeExistence(recipename):
-            printRecipe(recipefolder, f"{recipename}.csv")
+            printRecipe(recipefolder, f"{recipename}.csv", scale)
 
         else:
             click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
@@ -109,13 +109,13 @@ def add_recipe(recipename):
                 ordinalsuffix = ordinalNumber(i+1)
                 j = "N"
                 ing = input(f"enter name of {i+1}{ordinalsuffix} ingredient: ")
-                ingamount = input(f"enter amount of {ing} required: ")
+                ingamount = input(f"enter amount of {ing} required along with the unit: ")
                 while j != "y":
                     k = input(f"confirm ingredient and amount? (y/N): ")
                     if k == "y" and k != "N": j = k
                     else:
                         ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
-                        ingamount = input(f"enter amount of {ing} required: ")
+                        ingamount = input(f"enter amount of {ing} required along with the unit: ")
                 ingredients.append(f"{ing}")
                 if ingamount.isdigit():
                     b = "no_unit"
@@ -378,18 +378,7 @@ def checkRecipeExistence(recipename):
         return False
 
 
-def somethingAmountUnit(ingredients, ingredientamounts, ingredientunits, i, recipe):
-    if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
-        recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
-    elif ingredientunits[i] == "no_unit":
-        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}\n")
-    elif ingredientamounts[i] == "no_amount":
-        recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
-    else:
-        recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}")
-
-
-def printRecipe(recipefolder, file):
+def printRecipe(recipefolder, file, scale):
     recipefile = open(recipefolder / f"{file}", "r")
     reader = list(csv.reader(recipefile))
     ingredients = []
@@ -417,11 +406,11 @@ def printRecipe(recipefolder, file):
             if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
                 recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
             elif ingredientunits[i] == "no_unit":
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}\n")
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {float(ingredientamounts[i])*scale}\n")
             elif ingredientamounts[i] == "no_amount":
                 recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
             else:
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}\n")
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {float(ingredientamounts[i])*scale} {ingredientunits[i]}\n")
 
     recipe += "".join("\nSteps:\n")
     for i in range(len(steps)):
