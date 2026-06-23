@@ -1,3 +1,6 @@
 .DS_Store
 __pycache__/serialn.cpython-314.pyc
 /.idea
+/dist
+/build
+run.spec
