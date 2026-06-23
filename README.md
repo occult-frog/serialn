@@ -1,15 +1,15 @@
 # serialn
 
-serialn is a CLI tool/CLI app to view, edit, and store recipes. It is experimental so do expect stuff to break. It's also not finished yet.
+serialn is a CLI tool/CLI app to view, edit, and store recipes. It is experimental so do expect stuff to break.
 
 serialn is made using the click module for python.
 
 All the code is by me. No AI was used in the development of this project.
 
 ## Important things:
-1. Run list_recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
+1. Run list-recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
 
-2. Don't pass the recipe name as [RECIPENAME].csv in view_recipe, add_recipe, and remove_recipe commands. Pass it without the extension.
+2. Don't pass the recipe name as [RECIPENAME].csv in view-recipe, add-recipe, and remove-recipe commands. Pass it without the extension.
 
 3. All recipe names are stored in the recipeindex.csv file. The first column is for recipe names and the second column is for the tags they contain.
 
@@ -17,7 +17,7 @@ All the code is by me. No AI was used in the development of this project.
 
 5. The recipe files itself are stored in the recipes folder present in your home folder.
 
-6. It's best to pass the tags argument with a (#) for the search_tags and add_tags commands.
+6. It's best to pass the tags argument with a (#) for the search-tags and add-tags commands.
 
 7. When entering the recipe amount in add-recipe, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
 
