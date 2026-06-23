@@ -178,6 +178,7 @@ def add_recipe(recipename):
             stepcount = int(input("how many steps are there?: "))
             ingredients = []
             ingredientamounts = []
+            ingredientunits = []
             steps = []
             extranotes = []
             tags = ""
@@ -194,7 +195,21 @@ def add_recipe(recipename):
                         ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
                         ingamount = input(f"enter amount of {ing} required: ")
                 ingredients.append(f"{ing}")
-                ingredientamounts.append(f"{ingamount}\n")
+                if ingamount.isdigit():
+                    b = "no_unit"
+                elif ingamount == "":
+                    a = "no_amount"
+                    b = "no_unit"
+                else:
+                    index = 0
+                    for i, j in enumerate(ingamount):
+                        if not j.isdigit() and j != ".":
+                            index = i
+                            break
+                    a = ingamount[:index].strip()
+                    b = ingamount[index:].strip()
+                ingredientamounts.append(f"{a}")
+                ingredientunits.append(f"{b}\n")
 
             for i in range(stepcount):
                 ordinalsuffix = ordinalNumber(i+1)
@@ -236,7 +251,8 @@ def add_recipe(recipename):
             click.echo("\n")
             recipe = "Ingredients:\n"
             for i in range(len(ingredients)):
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]}")
+                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {ingredientamounts[i]} {ingredientunits[i]}")
+
             recipe += "".join("\nSteps:\n")
             for i in range(len(steps)):
                 recipe += "".join(f"{i+1}. {steps[i]}")
@@ -251,8 +267,8 @@ def add_recipe(recipename):
             confirmrecipe = input("confirm recipe? (y/N): ")
             if confirmrecipe == "y":
                 recipe1 = []
-                recipe2 = [ingredients, ingredientamounts, steps, extranotes]
-                recipe3 = ["", "", "", ""]
+                recipe2 = [ingredients, ingredientamounts, ingredientunits, steps, extranotes]
+                recipe3 = ["", "", "", "", ""]
 
                 longestlist = max(len(ingredients), len(steps), len(extranotes))
                 if longestlist == len(ingredients):
@@ -269,7 +285,7 @@ def add_recipe(recipename):
                             recipe3[index] = "none"
                         else:
                             recipe3[index] = j[i]
-                    recipe1.append([recipe3[0], recipe3[1], recipe3[2], recipe3[3]])
+                    recipe1.append([recipe3[0], recipe3[1], recipe3[2], recipe3[3], recipe3[4]])
 
 
                 recipe1[0].append(tags)
