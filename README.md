@@ -17,9 +17,7 @@ All the code is by me. No AI was used in the development of this project.
 
 5. The recipe files itself are stored in the recipes folder present in your home folder.
 
-6. It's best to pass the tags argument with a (#) for the search-tags and add-tags commands.
-
-7. When entering the recipe amount in add-recipe, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
+6. When entering the recipe amount in add-recipe, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
 
 
 ## Current commands:
@@ -39,7 +37,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     add-recipe [RECIPENAME]
     ```
-5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension.
+5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to remove that recipe.
     ```
     remove-recipe [RECIPENAME]
     ```
@@ -47,7 +45,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     search-tags [TAGS]
     ```
-7. Appends to or overwrites the tags for a given recipe. For the tags option pass --tag or -t along with the tag or leave it blank to assign an empty tag to recipe. -o or --overwrite can be passed as options to overwrite the current tags. It's best to pass the tags argument with a #. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown.
+7. Appends to or overwrites the tags for a given recipe. For the tags option pass --tag or -t along with the tag or leave it blank to assign an empty tag to the recipe. -o or --overwrite can be passed as options to overwrite the current tags. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown.Choose a number from the list to add tags to that recipe.
     ```
     add-tags [OPTIONS] [RECIPENAME] [TAGS]
     ```
