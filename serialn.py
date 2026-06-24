@@ -52,22 +52,12 @@ def view_recipe(recipename, scale):
             recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
             filelist = list(csv.reader(recipeindex))
             recipeindex.close()
-            click.echo("recipes:")
-            for i in filelist:
-                if (recipefolder / i[0]).exists():
-                    j = filelist.index(i)
-                    click.secho(f"{i[0]}", fg='green', nl=False)
-                    click.echo(f" ---- ", nl=False)
-                    click.secho(f"{i[1]}", fg='green', nl=False)
-                    click.echo(" ---- ", nl=False)
-                    click.secho(f"{j}", fg='cyan')
-
+            listRecipesWithIndex(recipefolder, filelist)
             q = int(input("choose recipe: "))
             if q < len(filelist):
                 printRecipe(recipefolder, filelist[q][0], scale)
             else:
-                click.echo("choose a number from the range :)")
-
+                click.echo("invalid number entered :(")
         elif checkRecipeExistence(recipename) == "exists":
             printRecipe(recipefolder, f"{recipename}.csv", scale)
         elif checkRecipeExistence(recipename) == "only in index":
@@ -293,29 +283,24 @@ def search_tags(tags):
 
 
 @click.command()
-@click.argument("recipename", required=True)
-@click.argument("tags", default="no_tags", required=False)
+@click.argument("recipename", required=False, default=None)
+@click.option("--tags", "-t", default="no_tags", required=False)
 @click.option("--overwrite", "-o", is_flag=True, required=False)
 def add_tags(recipename, tags, overwrite):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if checkRecipeExistence(recipename) == "exists":
+        if recipename is None:
             recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
-            reader = list(csv.reader(recipeindex))
-            taglist = []
-            recipelist = []
-            for i in reader:
-                recipelist.append(i[0])
-                taglist.append(i[1])
+            filelist = list(csv.reader(recipeindex))
             recipeindex.close()
-            name = f"{recipename}.csv"
-            i = recipelist.index(name)
-            if not overwrite and tags != "no_tags":
-                updateTags(name, f"{taglist[i]}{tags}")
-            elif not overwrite and tags == "no_tags":
-                click.echo("no tags were given to add :(")
-            elif overwrite:
-                updateTags(name, tags)
+            listRecipesWithIndex(recipefolder, filelist)
+            q = int(input("choose recipe: "))
+            if q < len(filelist):
+                addTagsLogic(recipefolder, filelist[q][0], overwrite, tags)
+            else:
+                click.echo("invalid number entered :(")
+        elif checkRecipeExistence(recipename) == "exists":
+            addTagsLogic(recipefolder, f"{recipename}.csv", overwrite, tags)
         elif checkRecipeExistence(recipename) == "only in index":
             click.echo("recipe is only in index and not in folder :(")
         elif checkRecipeExistence(recipename) == "not in index":
@@ -550,6 +535,7 @@ def editIngredients(recipefolder, recipename, isNone, number):
         recipefile = open(f"{recipefolder}/{recipename}", "w")
         writer = csv.writer(recipefile)
         writer.writerows(recipeinlist)
+        recipefile.close()
 
 
 def editSteps(recipefolder, recipename, isNone, number):
@@ -578,6 +564,7 @@ def editSteps(recipefolder, recipename, isNone, number):
         recipefile = open(f"{recipefolder}/{recipename}", "w")
         writer = csv.writer(recipefile)
         writer.writerows(recipeinlist)
+        recipefile.close()
 
 
 def editNotes(recipefolder, recipename, isNone, number):
@@ -606,6 +593,7 @@ def editNotes(recipefolder, recipename, isNone, number):
         recipefile = open(f"{recipefolder}/{recipename}", "w")
         writer = csv.writer(recipefile)
         writer.writerows(recipeinlist)
+        recipefile.close()
 
 
 def editRecipe(recipefolder, recipename, ing, step, note):
@@ -635,3 +623,34 @@ def editRecipe(recipefolder, recipename, ing, step, note):
             editSteps(recipefolder, recipename, False, step)
         if note is not None:
             editNotes(recipefolder, recipename, False, note)
+
+
+def listRecipesWithIndex(recipefolder, filelist):
+    click.echo("recipes:")
+    for i in filelist:
+        if (recipefolder / i[0]).exists():
+            j = filelist.index(i)
+            click.secho(f"{i[0]}", fg='green', nl=False)
+            click.echo(f" ---- ", nl=False)
+            click.secho(f"{i[1]}", fg='green', nl=False)
+            click.echo(" ---- ", nl=False)
+            click.secho(f"{j}", fg='cyan')
+
+
+def addTagsLogic(recipefolder, recipename, overwrite, tags):
+    recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+    reader = list(csv.reader(recipeindex))
+    taglist = []
+    recipelist = []
+    for i in reader:
+        recipelist.append(i[0])
+        taglist.append(i[1])
+    recipeindex.close()
+    i = recipelist.index(recipename)
+    click.echo(recipename)
+    if not overwrite and tags != "no_tags":
+        updateTags(recipename, f"{taglist[i]}{tags}")
+    elif not overwrite and tags == "no_tags":
+        click.echo("no tags were given to add :(")
+    elif overwrite:
+        updateTags(recipename, tags)
