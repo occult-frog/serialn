@@ -34,9 +34,9 @@ def list_recipes():
 
     for i in filelist:
         if (recipefolder/i[0]).exists():
-            click.echo(f"{i[0]} ---- {i[1]}: found :)")
+            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": found :)")
         else:
-            click.echo(f"{i[0]} ---- {i[1]}: not found :(")
+            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": not found :(")
 
     recipeindex.close()
 
@@ -117,6 +117,8 @@ def add_recipe(recipename):
                         ing = input(f"enter name of {i + 1}{ordinalsuffix} ingredient: ")
                         ingamount = input(f"enter amount of {ing} required along with the unit: ")
                 ingredients.append(f"{ing}")
+                a = "no_amount"
+                b = "no_unit"
                 if ingamount.isdigit():
                     b = "no_unit"
                 elif ingamount == "":
@@ -124,9 +126,9 @@ def add_recipe(recipename):
                     b = "no_unit"
                 else:
                     index = 0
-                    for i, j in enumerate(ingamount):
-                        if not j.isdigit() and j != ".":
-                            index = i
+                    for k, l in enumerate(ingamount):
+                        if not l.isdigit() and l != ".":
+                            index = k
                             break
                     a = ingamount[:index].strip()
                     b = ingamount[index:].strip()
@@ -224,16 +226,7 @@ def add_recipe(recipename):
                 recipefile.close()
                 click.echo("recipe saved :)")
 
-                recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
-                recipelist = list(csv.reader(recipeindex))
-                recipeindex.close()
-
-                recipebutinlist = [f"{recipename}.txt", tags]
-                recipelist.append(recipebutinlist)
-                recipeindex = open(f"{recipefolder}/recipeindex.csv", "w+")
-                writer = csv.writer(recipeindex)
-                writer.writerows(recipelist)
-                recipeindex.close()
+                refreshIndex(recipefolder)
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
@@ -274,7 +267,9 @@ def search_tags(tags):
         click.echo("recipes with the given tags:")
         for i in range(len(taglist)):
             if tags in taglist[i]:
-                click.echo(f"{recipelist[i]} ---- {taglist[i]}")
+                click.secho(f"{recipelist[i]}", fg='green', nl=False)
+                click.secho(" ---- ", nl=False)
+                click.secho(f"{taglist[i]}", fg='yellow')
         recipeindex.close()
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
@@ -358,9 +353,9 @@ def updateTags(recipename, tags):
     click.echo("recipes:")
     for i in filelist:
         if (recipefolder / i[0]).exists():
-            click.echo(f"{i[0]} ---- {i[1]}: found :)")
+            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": found :)")
         else:
-            click.echo(f"{i[0]} ---- {i[1]}: not found :(")
+            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": not found :(")
 
 
 def checkRecipeExistence(recipename):
@@ -430,3 +425,10 @@ def printRecipe(recipefolder, file, scale):
     recipe += "".join(f"{tags}\n")
 
     click.echo(recipe)
+
+
+def printRecipeList(a, b, c, d):
+    click.secho(a, fg='green', nl=False)
+    click.secho(b, nl=False)
+    click.secho(c, fg='yellow', nl=False)
+    click.secho(d)
