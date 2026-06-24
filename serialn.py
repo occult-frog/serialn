@@ -126,6 +126,7 @@ def add_recipe(recipename):
                 a = "no_amount"
                 b = "no_unit"
                 if ingamount.isdigit():
+                    a = ingamount
                     b = "no_unit"
                 elif ingamount == "":
                     a = "no_amount"
@@ -338,37 +339,16 @@ def edit_recipe(recipename, ing, step, note):
             q = int(input("choose recipe: "))
             click.echo("")
             if q < len(filelist):
-                recipename = filelist[q][0]
-                printRecipe(recipefolder, recipename, 1)
-                if ing is None and step is None and note is None:
-                    part = input("Ingredients ---- ing/i"
-                                     "\nSteps ---- step/s"
-                                     "\nNotes ---- note/n"
-                                     "\nwhich part of the recipe do you want to edit?: ")
-
-                    if part == "ing" or part == "i":
-                        editIngredients(recipefolder, recipename)
-
-                    elif part == "step" or part == "s":
-                        editSteps(recipefolder, recipename)
-
-                    elif part == "note" or part == "n":
-                        editNotes(recipefolder, recipename)
-
-                    else:
-                        click.echo("invalid input entered :(\n"
-                                    "enter either ing or i, step or s, or note or n")
+                editRecipe(recipefolder, filelist[q][0], ing, step, note)
             else:
                 click.echo("invalid number entered :(")
 
-        else:
-            pass
-
+        elif checkRecipeExistence(recipename):
+                editRecipe(recipefolder, f"{recipename}.csv", ing, step, note)
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
-
 
 
 def refreshIndex(recipefolder):
@@ -497,7 +477,7 @@ def printRecipeList(a, b, c, d):
     click.secho(d)
 
 
-def editIngredients(recipefolder, recipename):
+def editIngredients(recipefolder, recipename, isNone, number):
     recipefile = open(f"{recipefolder}/{recipename}", "r")
     recipeinlist = list(csv.reader(recipefile))
     total = 0
@@ -506,7 +486,8 @@ def editIngredients(recipefolder, recipename):
             break
         else:
             total += 1
-    number = int(input("enter ingredient number to modify: "))
+    if isNone:
+        number = int(input("enter ingredient number to modify: "))
     if number <= total:
         j = "N"
         ordinalsuffix = ordinalNumber(number)
@@ -522,6 +503,7 @@ def editIngredients(recipefolder, recipename):
         a = "no_amount"
         b = "no_unit"
         if ingamount.isdigit():
+            a = ingamount
             b = "no_unit"
         elif ingamount == "":
             a = "no_amount"
@@ -543,7 +525,7 @@ def editIngredients(recipefolder, recipename):
         writer.writerows(recipeinlist)
 
 
-def editSteps(recipefolder, recipename):
+def editSteps(recipefolder, recipename, isNone, number):
     recipefile = open(f"{recipefolder}/{recipename}", "r")
     recipeinlist = list(csv.reader(recipefile))
     total = 0
@@ -552,7 +534,8 @@ def editSteps(recipefolder, recipename):
             break
         else:
             total += 1
-    number = int(input("enter step number to modify: "))
+    if isNone:
+        number = int(input("enter step number to modify: "))
     if number <= total:
         ordinalsuffix = ordinalNumber(number)
         j = "N"
@@ -570,7 +553,7 @@ def editSteps(recipefolder, recipename):
         writer.writerows(recipeinlist)
 
 
-def editNotes(recipefolder, recipename):
+def editNotes(recipefolder, recipename, isNone, number):
     recipefile = open(f"{recipefolder}/{recipename}", "r")
     recipeinlist = list(csv.reader(recipefile))
     total = 0
@@ -579,7 +562,8 @@ def editNotes(recipefolder, recipename):
             break
         else:
             total += 1
-    number = int(input("enter note number to modify: "))
+    if isNone:
+        number = int(input("enter note number to modify: "))
     if number <= total:
         ordinalsuffix = ordinalNumber(number)
         note = input(f"enter {number}{ordinalsuffix} note: ")
@@ -595,3 +579,32 @@ def editNotes(recipefolder, recipename):
         recipefile = open(f"{recipefolder}/{recipename}", "w")
         writer = csv.writer(recipefile)
         writer.writerows(recipeinlist)
+
+
+def editRecipe(recipefolder, recipename, ing, step, note):
+    printRecipe(recipefolder, recipename, 1)
+    if ing is None and step is None and note is None:
+        part = input("Ingredients ---- ing/i"
+                     "\nSteps ---- step/s"
+                     "\nNotes ---- note/n"
+                     "\nwhich part of the recipe do you want to edit?: ")
+
+        if part == "ing" or part == "i":
+            editIngredients(recipefolder, recipename, True, 0)
+
+        elif part == "step" or part == "s":
+            editSteps(recipefolder, recipename, True, 0)
+
+        elif part == "note" or part == "n":
+            editNotes(recipefolder, recipename, True, 0)
+
+        else:
+            click.echo("invalid input entered :(\n"
+                       "enter either ing or i, step or s, or note or n")
+    else:
+        if ing is not None:
+            editIngredients(recipefolder, recipename, False, ing)
+        if step is not None:
+            editSteps(recipefolder, recipename, False, step)
+        if note is not None:
+            editNotes(recipefolder, recipename, False, note)
