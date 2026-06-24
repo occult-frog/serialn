@@ -235,16 +235,22 @@ def add_recipe(recipename):
 
 
 @click.command()
-@click.argument("recipename", required=True)
+@click.argument("recipename", required=False, default=None)
 def remove_recipe(recipename):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if checkRecipeExistence(recipename) == "exists":
-            confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
-            if confirmation == "y":
-                (recipefolder / f"{recipename}.csv").unlink()
-                click.echo("recipe removed :)")
-                refreshIndex(recipefolder)
+        if recipename is None:
+            recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+            filelist = list(csv.reader(recipeindex))
+            recipeindex.close()
+            listRecipesWithIndex(recipefolder, filelist)
+            q = int(input("choose recipe: "))
+            if q < len(filelist):
+                removeRecipeLogic(recipefolder, filelist[q][0])
+            else:
+                click.echo("invalid number entered :(")
+        elif checkRecipeExistence(recipename) == "exists":
+            removeRecipeLogic(recipefolder, f"{recipename}.csv")
         elif checkRecipeExistence(recipename) == "only in index":
             click.echo("recipe is only in index and not in folder :(")
         elif checkRecipeExistence(recipename) == "not in index":
@@ -654,3 +660,11 @@ def addTagsLogic(recipefolder, recipename, overwrite, tags):
         click.echo("no tags were given to add :(")
     elif overwrite:
         updateTags(recipename, tags)
+
+
+def removeRecipeLogic(recipefolder, recipename):
+    confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
+    if confirmation == "y":
+        (recipefolder / recipename).unlink()
+        click.echo("recipe removed :)")
+        refreshIndex(recipefolder)
