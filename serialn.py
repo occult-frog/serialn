@@ -347,107 +347,22 @@ def edit_recipe(recipename, ing, step, note):
                                      "\nwhich part of the recipe do you want to edit?: ")
 
                     if part == "ing" or part == "i":
-                        recipefile = open(f"{recipefolder}/{recipename}", "r")
-                        recipeinlist = list(csv.reader(recipefile))
-                        total = 0
-                        for i in recipeinlist:
-                            if i[0] == "none":
-                                break
-                            else:
-                                total += 1
-                        number = int(input("enter ingredient number to modify: "))
-                        if number <= total:
-                            j = "N"
-                            ordinalsuffix = ordinalNumber(number)
-                            ing = input(f"enter name of {number}{ordinalsuffix} ingredient: ")
-                            ingamount = input(f"enter amount of {ing} required along with the unit: ")
-                            while j != "y":
-                                k = input(f"confirm ingredient and amount? (y/N): ")
-                                if k == "y":
-                                    j = k
-                                else:
-                                    ing = input(f"enter name of {number}{ordinalsuffix} ingredient: ")
-                                    ingamount = input(f"enter amount of {ing} required along with the unit: ")
-                            a = "no_amount"
-                            b = "no_unit"
-                            if ingamount.isdigit():
-                                b = "no_unit"
-                            elif ingamount == "":
-                                a = "no_amount"
-                                b = "no_unit"
-                            else:
-                                index = 0
-                                for k, l in enumerate(ingamount):
-                                    if not l.isdigit() and l != ".":
-                                        index = k
-                                        break
-                                a = ingamount[:index].strip()
-                                b = ingamount[index:].strip()
-                            recipeinlist[number-1][0] = ing
-                            recipeinlist[number-1][1] = a
-                            recipeinlist[number - 1][2] = b
-                            recipefile.close()
-                            recipefile = open(f"{recipefolder}/{recipename}", "w")
-                            writer = csv.writer(recipefile)
-                            writer.writerows(recipeinlist)
+                        editIngredients(recipefolder, recipename)
 
                     elif part == "step" or part == "s":
-                        recipefile = open(f"{recipefolder}/{recipename}", "r")
-                        recipeinlist = list(csv.reader(recipefile))
-                        total = 0
-                        for i in recipeinlist:
-                            if i[0] == "none":
-                                break
-                            else:
-                                total += 1
-                        number = int(input("enter step number to modify: "))
-                        if number <= total:
-                            ordinalsuffix = ordinalNumber(number)
-                            j = "N"
-                            step = input(f"enter {number}{ordinalsuffix} step: ")
-                            while j != "y":
-                                k = input(f"confirm step? (y/N): ")
-                                if k == "y" and k != "N":
-                                    j = k
-                                else:
-                                    step = input(f"enter {number}{ordinalsuffix} step: ")
-                            recipeinlist[number-1][2] = step
-                            recipefile.close()
-                            recipefile = open(f"{recipefolder}/{recipename}", "w")
-                            writer = csv.writer(recipefile)
-                            writer.writerows(recipeinlist)
+                        editSteps(recipefolder, recipename)
 
                     elif part == "note" or part == "n":
-                        recipefile = open(f"{recipefolder}/{recipename}", "r")
-                        recipeinlist = list(csv.reader(recipefile))
-                        total = 0
-                        for i in recipeinlist:
-                            if i[0] == "none":
-                                break
-                            else:
-                                total += 1
-                        number = int(input("enter note number to modify: "))
-                        if number <= total:
-                            ordinalsuffix = ordinalNumber(number)
-                            note = input(f"enter {number}{ordinalsuffix} note: ")
-                            k = "N"
-                            while k != "y":
-                                l = input(f"confirm note? (y/N): ")
-                                if l == "y":
-                                    k = l
-                                else:
-                                    note = input(f"enter {number}{ordinalsuffix} note: ")
-                            recipeinlist[number-1][3] = note
-                            recipefile.close()
-                            recipefile = open(f"{recipefolder}/{recipename}", "w")
-                            writer = csv.writer(recipefile)
-                            writer.writerows(recipeinlist)
+                        editNotes(recipefolder, recipename)
 
                     else:
                         click.echo("invalid input entered :(\n"
                                     "enter either ing or i, step or s, or note or n")
             else:
-                click.echo("choose a number from the range :)")
+                click.echo("invalid number entered :(")
+
+        else:
+            pass
 
 
     else:
@@ -580,3 +495,103 @@ def printRecipeList(a, b, c, d):
     click.secho(b, nl=False)
     click.secho(c, fg='yellow', nl=False)
     click.secho(d)
+
+
+def editIngredients(recipefolder, recipename):
+    recipefile = open(f"{recipefolder}/{recipename}", "r")
+    recipeinlist = list(csv.reader(recipefile))
+    total = 0
+    for i in recipeinlist:
+        if i[0] == "none":
+            break
+        else:
+            total += 1
+    number = int(input("enter ingredient number to modify: "))
+    if number <= total:
+        j = "N"
+        ordinalsuffix = ordinalNumber(number)
+        ing = input(f"enter name of {number}{ordinalsuffix} ingredient: ")
+        ingamount = input(f"enter amount of {ing} required along with the unit: ")
+        while j != "y":
+            k = input(f"confirm ingredient and amount? (y/N): ")
+            if k == "y":
+                j = k
+            else:
+                ing = input(f"enter name of {number}{ordinalsuffix} ingredient: ")
+                ingamount = input(f"enter amount of {ing} required along with the unit: ")
+        a = "no_amount"
+        b = "no_unit"
+        if ingamount.isdigit():
+            b = "no_unit"
+        elif ingamount == "":
+            a = "no_amount"
+            b = "no_unit"
+        else:
+            index = 0
+            for k, l in enumerate(ingamount):
+                if not l.isdigit() and l != ".":
+                    index = k
+                    break
+            a = ingamount[:index].strip()
+            b = ingamount[index:].strip()
+        recipeinlist[number - 1][0] = ing
+        recipeinlist[number - 1][1] = a
+        recipeinlist[number - 1][2] = b
+        recipefile.close()
+        recipefile = open(f"{recipefolder}/{recipename}", "w")
+        writer = csv.writer(recipefile)
+        writer.writerows(recipeinlist)
+
+
+def editSteps(recipefolder, recipename):
+    recipefile = open(f"{recipefolder}/{recipename}", "r")
+    recipeinlist = list(csv.reader(recipefile))
+    total = 0
+    for i in recipeinlist:
+        if i[0] == "none":
+            break
+        else:
+            total += 1
+    number = int(input("enter step number to modify: "))
+    if number <= total:
+        ordinalsuffix = ordinalNumber(number)
+        j = "N"
+        step = input(f"enter {number}{ordinalsuffix} step: ")
+        while j != "y":
+            k = input(f"confirm step? (y/N): ")
+            if k == "y" and k != "N":
+                j = k
+            else:
+                step = input(f"enter {number}{ordinalsuffix} step: ")
+        recipeinlist[number - 1][3] = step
+        recipefile.close()
+        recipefile = open(f"{recipefolder}/{recipename}", "w")
+        writer = csv.writer(recipefile)
+        writer.writerows(recipeinlist)
+
+
+def editNotes(recipefolder, recipename):
+    recipefile = open(f"{recipefolder}/{recipename}", "r")
+    recipeinlist = list(csv.reader(recipefile))
+    total = 0
+    for i in recipeinlist:
+        if i[0] == "none":
+            break
+        else:
+            total += 1
+    number = int(input("enter note number to modify: "))
+    if number <= total:
+        ordinalsuffix = ordinalNumber(number)
+        note = input(f"enter {number}{ordinalsuffix} note: ")
+        k = "N"
+        while k != "y":
+            l = input(f"confirm note? (y/N): ")
+            if l == "y":
+                k = l
+            else:
+                note = input(f"enter {number}{ordinalsuffix} note: ")
+        recipeinlist[number - 1][4] = note
+        recipefile.close()
+        recipefile = open(f"{recipefolder}/{recipename}", "w")
+        writer = csv.writer(recipefile)
+        writer.writerows(recipeinlist)
