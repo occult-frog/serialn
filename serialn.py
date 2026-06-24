@@ -56,11 +56,17 @@ def view_recipe(recipename, scale):
             for i in filelist:
                 if (recipefolder / i[0]).exists():
                     j = filelist.index(i)
-                    click.echo(f"{i[0]} ---- {i[1]} ---- {j}")
+                    click.secho(f"{i[0]}", fg='green', nl=False)
+                    click.echo(f" ---- ", nl=False)
+                    click.secho(f"{i[1]}", fg='green', nl=False)
+                    click.echo(" ---- ", nl=False)
+                    click.secho(f"{j}", fg='cyan')
 
             q = int(input("choose recipe: "))
             if q < len(filelist):
                 printRecipe(recipefolder, filelist[q][0], scale)
+            else:
+                click.echo("choose a number from the range :)")
 
         elif checkRecipeExistence(recipename):
             printRecipe(recipefolder, f"{recipename}.csv", scale)
@@ -306,6 +312,44 @@ def add_tags(recipename, tags, overwrite):
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
+
+
+@click.command()
+@click.argument('recipename', required=False, default=None)
+@click.option('--ing', '-i', required=False, type=int, default=None)
+@click.option('--step', '-s', required=False, type=int, default=None)
+@click.option('--note', '-n', required=False, type=int, default=None)
+def edit_recipe(recipename, ing, step, note):
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
+        if recipename is None:
+            recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
+            filelist = list(csv.reader(recipeindex))
+            recipeindex.close()
+            click.echo("recipes:")
+            for i in filelist:
+                if (recipefolder / i[0]).exists():
+                    j = filelist.index(i)
+                    click.secho(f"{i[0]}", fg='green', nl=False)
+                    click.echo(f" ---- ", nl=False)
+                    click.secho(f"{i[1]}", fg='green', nl=False)
+                    click.echo(" ---- ", nl=False)
+                    click.secho(f"{j}", fg='cyan')
+            q = int(input("choose recipe: "))
+            if q < len(filelist):
+                if ing is None and step is None and note is None:
+                    part = int(input("\nIngredients ---- ing/i"
+                                     "\nSteps ---- step/s"
+                                     "\nNotes ---- note/n"
+                                     "\nwhich part of the recipe do you want to edit?: "))
+            else:
+                click.echo("choose a number from the range :)")
+
+
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"list-recipes\" to create them")
+
 
 
 def refreshIndex(recipefolder):
