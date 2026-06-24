@@ -27,7 +27,7 @@ All the code is by me. No AI was used in the development of this project.
     ```
     list-recipes
     ```
-2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe. Pass --scale or -s and then a number to scale it by that. The default sclae is 1.
+2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe. Pass --scale or -s and then a number to scale it by that. The default scale is 1.
     ```
     view-recipe [RECIPENAME] [OPTIONS]
     ```
@@ -47,7 +47,15 @@ All the code is by me. No AI was used in the development of this project.
     ```
     search-tags [TAGS]
     ```
-7. Appends to or overwrites the tags for a given recipe. Leave tags argument blank to assign an empty tag to recipe. -o or --overwrite can be passed as options to overwrite the current tags. It's best to pass the tags argument with a #.
+7. Appends to or overwrites the tags for a given recipe. For the tags option pass --tag or -t along with the tag or leave it blank to assign an empty tag to recipe. -o or --overwrite can be passed as options to overwrite the current tags. It's best to pass the tags argument with a #. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown.
     ```
     add-tags [OPTIONS] [RECIPENAME] [TAGS]
+    ```
+8. Allows you to edit a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to edit that recipe. For the options pass:  
+    I. -ing or -i with the ingredient number to edit that ingredient.  
+    II. -step or -s with the step number to edit that step.  
+    III. -note or -n with the note number to edit that note.  
+Or pass a combination of these.
+    ```
+    edit-recipe [RECIPENAME] [OPTIONS]
     ```
