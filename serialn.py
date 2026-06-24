@@ -68,12 +68,16 @@ def view_recipe(recipename, scale):
             else:
                 click.echo("choose a number from the range :)")
 
-        elif checkRecipeExistence(recipename):
+        elif checkRecipeExistence(recipename) == "exists":
             printRecipe(recipefolder, f"{recipename}.csv", scale)
-
-        else:
-            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
+        elif checkRecipeExistence(recipename) == "only in index":
+            click.echo("recipe is only in index and not in folder :(")
+        elif checkRecipeExistence(recipename) == "not in index":
+            click.echo("recipe is not in index but is in recipe folder :)\n"
+                       "run \"refresh-recipes\" to add it to recipe index")
+        elif checkRecipeExistence(recipename) == "doesn't exist":
+            click.echo("recipe is neither in the index nor in the recipe folder :(\n"
+                       "try typing the recipe name without the .csv extension")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
@@ -245,15 +249,20 @@ def add_recipe(recipename):
 def remove_recipe(recipename):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if checkRecipeExistence(recipename):
+        if checkRecipeExistence(recipename) == "exists":
             confirmation = input(f"u sure you wanna remove {recipename}? this will be permanent. (y/N): ")
             if confirmation == "y":
                 (recipefolder / f"{recipename}.csv").unlink()
                 click.echo("recipe removed :)")
                 refreshIndex(recipefolder)
-        else:
-            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
+        elif checkRecipeExistence(recipename) == "only in index":
+            click.echo("recipe is only in index and not in folder :(")
+        elif checkRecipeExistence(recipename) == "not in index":
+            click.echo("recipe is not in index but is in recipe folder :)\n"
+                       "run \"refresh-recipes\" to add it to recipe index")
+        elif checkRecipeExistence(recipename) == "doesn't exist":
+            click.echo("recipe is neither in the index nor in the recipe folder :(\n"
+                       "try typing the recipe name without the .csv extension")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
@@ -290,7 +299,7 @@ def search_tags(tags):
 def add_tags(recipename, tags, overwrite):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
-        if checkRecipeExistence(recipename):
+        if checkRecipeExistence(recipename) == "exists":
             recipeindex = open(f"{recipefolder}/recipeindex.csv", "r")
             reader = list(csv.reader(recipeindex))
             taglist = []
@@ -307,9 +316,14 @@ def add_tags(recipename, tags, overwrite):
                 click.echo("no tags were given to add :(")
             elif overwrite:
                 updateTags(name, tags)
-        else:
-            click.echo(f"recipe with the name {recipename} doesnt exist in the recipe index :P\n"
-                       f"try typing the recipe name without the .csv extension or running \"refresh-recipes\"")
+        elif checkRecipeExistence(recipename) == "only in index":
+            click.echo("recipe is only in index and not in folder :(")
+        elif checkRecipeExistence(recipename) == "not in index":
+            click.echo("recipe is not in index but is in recipe folder :)\n"
+                       "run \"refresh-recipes\" to add it to recipe index")
+        elif checkRecipeExistence(recipename) == "doesn't exist":
+            click.echo("recipe is neither in the index nor in the recipe folder :(\n"
+                       "try typing the recipe name without the .csv extension")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
@@ -343,8 +357,17 @@ def edit_recipe(recipename, ing, step, note):
             else:
                 click.echo("invalid number entered :(")
 
-        elif checkRecipeExistence(recipename):
-                editRecipe(recipefolder, f"{recipename}.csv", ing, step, note)
+        elif checkRecipeExistence(recipename) == "exists":
+            editRecipe(recipefolder, f"{recipename}.csv", ing, step, note)
+        elif checkRecipeExistence(recipename) == "only in index":
+            click.echo("recipe is only in index and not in folder :(")
+        elif checkRecipeExistence(recipename) == "not in index":
+            click.echo("recipe is not in index but is in recipe folder :)\n"
+                       "run \"refresh-recipes\" to add it to recipe index")
+        elif checkRecipeExistence(recipename) == "doesn't exist":
+            click.echo("recipe is neither in the index nor in the recipe folder :(\n"
+                       "try typing the recipe name without the .csv extension")
+
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
@@ -410,10 +433,14 @@ def checkRecipeExistence(recipename):
         recipelist.append(i[0])
     recipeindex.close()
     name = f"{recipename}.csv"
-    if name in recipelist:
-        return True
+    if name in recipelist and (recipefolder/name).exists():
+        return "exists"
+    elif name in recipelist and not (recipefolder/name).exists():
+        return "only in index"
+    elif name not in recipelist and (recipefolder/name).exists():
+        return "not in index"
     else:
-        return False
+        return "doesn't exist"
 
 
 def printRecipe(recipefolder, file, scale):
