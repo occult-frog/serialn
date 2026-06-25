@@ -97,3 +97,8 @@ or pass a combination of these.
 ## Why was this made?
 
 I felt like it would be pretty cool to manage recipes in a terminal window so yea. Also I wanted to experiment with cli tools in python.
+
+
+## Credits
+
+All the code is by me. No AI was used. Thanks to the Click team for the click module.
