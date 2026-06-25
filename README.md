@@ -8,6 +8,10 @@ All the code is by me. No AI was used in the development of this project.
 
 https://github.com/user-attachments/assets/8957fbe7-dc0e-4409-bc89-e1410c3501d6
 
+serialn has only been tested on Mac. The releases are only for Mac. If you want to run on Windows you will have to build and test it by yourself.
+
+There is a zip in the source code containing videos on how to use the commands incase the descriptions given below aren't clear.
+
 ## Installation:
 serialn has only been tested on Mac. There are two ways to install it:  
 Method 1: 
@@ -39,8 +43,6 @@ Method 2:
 
 
 ## Important things:
-1. The source code has a zip file named "serialn-videos" where there are videos showing how to use every command.
-
 1. Run list-recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
 
 1. Don't pass the recipe name as [RECIPENAME].csv in view-recipe, add-recipe, and remove-recipe commands. Pass it without the extension.
@@ -87,11 +89,11 @@ Method 2:
     I. -ing or -i with the ingredient number to edit that ingredient.  
     II. -step or -s with the step number to edit that step.  
     III. -note or -n with the note number to edit that note.  
-Or pass a combination of these.
+or pass a combination of these.
     ```
     edit-recipe [RECIPENAME] [OPTIONS]
     ```
 
 ## Why was this made?
 
-I felt like it would be pretty cool to manage recipes in a terminal window so yea.
+I felt like it would be pretty cool to manage recipes in a terminal window so yea. Also I wanted to experiment with cli tools in python.
