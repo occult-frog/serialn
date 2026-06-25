@@ -6,6 +6,8 @@ serialn is made using the click module for python.
 
 All the code is by me. No AI was used in the development of this project.
 
+https://github.com/user-attachments/assets/8957fbe7-dc0e-4409-bc89-e1410c3501d6
+
 ## Important things:
 1. Run list-recipes when you first install serialn to create the recipes folder (present in your home folder) and recipeindex.csv file.
 
