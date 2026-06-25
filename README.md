@@ -8,7 +8,7 @@ All the code is by me. No AI was used in the development of this project.
 
 https://github.com/user-attachments/assets/8957fbe7-dc0e-4409-bc89-e1410c3501d6
 
-serialn has only been tested on Mac. The releases are only for Mac. If you want to run on Windows you will have to build and test it by yourself.
+serialn has only been tested on a Mac running a Apple Silicon processor. The releases are only for Macs running a Apple Silicon processor. If you want to run on Windows you will have to build and test it by yourself. There is no guarantee it will work on Windows or Intel Macs.
 
 There is a zip in the source code containing videos on how to use the commands incase the descriptions given below aren't clear.
 
