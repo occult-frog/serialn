@@ -83,7 +83,7 @@ def refresh_recipes():
         filelist = list(csv.reader(recipeindex))
         click.echo("recipes:")
         for i in filelist:
-            click.echo(f"{i[0]} ----- {i[1]}")
+            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f"")
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")

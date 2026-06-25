@@ -12,6 +12,7 @@ cli.add_command(add_recipe, name="add-recipe")
 cli.add_command(remove_recipe, name="remove-recipe")
 cli.add_command(search_tags, name="search-tags")
 cli.add_command(add_tags, name="add-tags")
+cli.add_command(edit_recipe, name="edit-recipe")
 
 if __name__ == "__main__":
     cli()
