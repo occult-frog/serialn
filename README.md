@@ -21,7 +21,7 @@ Method 1:
 
 5. Run
     ```
-    pip3 install .
+    pip3 install -e .
     ```
 
 6. Now you can open a new terminal window and run commands. You don't need to add the "./serialn" prefix as in the videos.
