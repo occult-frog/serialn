@@ -10,7 +10,8 @@ def hi():
 
 
 @click.command()
-def list_recipes():
+@click.option('--tags', '-t', default=None, required=False)
+def list_recipes(tags):
     recipefolder = Path.home() / "recipes"
     recipeindexpath = recipefolder / "recipeindex.csv"
 
@@ -33,11 +34,20 @@ def list_recipes():
 
     click.echo("recipes:")
 
-    for i in filelist:
-        if (recipefolder/i[0]).exists():
-            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": found :)")
-        else:
-            printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": not found :(")
+    if tags is None:
+        for i in filelist:
+            if (recipefolder/i[0]).exists():
+                printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": found :)")
+            else:
+                printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": not found :(")
+
+    elif tags is not None:
+        for i in filelist:
+            if tags in i[1]:
+                if (recipefolder/i[0]).exists():
+                    printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": found :)")
+                else:
+                    printRecipeList(f"{i[0]}", f" ----", f" {i[1]}", f": not found :(")
 
     recipeindex.close()
 
