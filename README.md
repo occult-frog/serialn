@@ -1,7 +1,7 @@
 # serialn
 
 serialn is a CLI tool/CLI app to view, edit, and store recipes.
-
+serialn's website is https://serialn.vercel.app .
 serialn is made using the click module for python.
 
 All the code is by me. No AI was used in the development of this project.
@@ -10,7 +10,7 @@ https://github.com/user-attachments/assets/8957fbe7-dc0e-4409-bc89-e1410c3501d6
 
 serialn has only been tested on a Mac running a Apple Silicon processor. The releases are only for Macs running an Apple Silicon processor. If you want to run on Windows you will have to build and test it by yourself. There is no guarantee it will work on Windows or Intel Macs.
 
-There is a zip in the source code containing videos on how to use the commands incase the descriptions given below aren't clear.
+There is a zip in the source code containing videos on how to use the commands in case the descriptions given below aren't clear.
 
 ## Installation:
 serialn has only been tested on Mac. There are two ways to install it:  
@@ -57,9 +57,9 @@ Method 2:
 
 
 ## Current commands:
-1. Lists all recipes present in the recipeindex.csv file. If the recipeindex.csv file or the recipes folder is not present, it creates them. Run this command when you first install serialn.
+1. Lists all recipes present in the recipeindex.csv file. If the recipeindex.csv file or the recipes folder is not present, it creates them. Run this command when you first install serialn. --tags or -t can be passed as options with a tag to filter recipes by tags. It's best to pass the tags with a #.
     ```
-    list-recipes
+    list-recipes [OPTIONS]
     ```
 2. Allows you to view a recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to view that recipe. Pass --scale or -s and then a number to scale it by that. The default scale is 1.
     ```
