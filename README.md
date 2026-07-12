@@ -69,9 +69,9 @@ Method 2:
     ```
     refresh-recipes
     ```
-4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. When entering the recipe amount, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit.
+4. Walks you through a proceedure to add a recipe. Requires a recipe name. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. When entering the recipe amount, enter it as 500 mL or 500mL. Entering only a number assigns no unit to that ingredient and leaving it blank assigns neither an amount nor a unit. For the options pass --ing / -i with a number for number of ingredients or --steps / -s with a number for number of steps. Passing these is optional.
     ```
-    add-recipe [RECIPENAME]
+    add-recipe [RECIPENAME] [OPTIONS]
     ```
 5. Removes the specified recipe. Don't pass the recipe name as [RECIPENAME].csv. Pass it without the extension. If the recipe name argument is left blank then a list of recipes with a number next to them will be shown. Choose a number from the list to remove that recipe.
     ```

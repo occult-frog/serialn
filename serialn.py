@@ -101,14 +101,22 @@ def refresh_recipes():
 
 @click.command()
 @click.argument("recipename", required=True)
-def add_recipe(recipename):
+@click.option('--ing', '-i', required=False, type=int, default=None)
+@click.option('--step', '-res', required=False, type=int, default=None)
+def add_recipe(recipename, ing, step):
     recipefolder = Path.home() / "recipes"
     if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
         if (recipefolder/f"{recipename}.csv").exists():
             click.echo(f"recipe with the name {recipename} already exists :P")
         else:
-            ingredientcount = int(input("how many ingredients are there?: "))
-            stepcount = int(input("how many steps are there?: "))
+            if ing is None:
+                ingredientcount = int(input("how many ingredients are there?: "))
+            else:
+                ingredientcount = ing
+            if step is None:
+                stepcount = int(input("how many steps are there?: "))
+            else:
+                stepcount = step
             ingredients = []
             ingredientamounts = []
             ingredientunits = []
