@@ -382,3 +382,24 @@ def edit_recipe(recipename, ing, step, note):
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
                    "run \"list-recipes\" to create them")
+
+
+@click.command()
+def recipe_settings():
+    recipefolder = Path.home() / "recipes"
+    if recipefolder.exists() and (recipefolder / "recipeindex.csv").exists():
+        if (recipefolder / "settings.csv").exists():
+            pass
+        else:
+            settings = open(f"{recipefolder}/settings.csv", "w")
+            writer = csv.writer(settings)
+            a = [["ing_color", ""], ["amount_color", ""], ["step_color", ""], ["note_color", ""]]
+            writer.writerows(a)
+            click.echo("settings file has been created :)\n")
+
+        settings = open(f"{recipefolder}/settings.csv", "r")
+        settings_data = list(csv.reader(settings))
+        settings.close()
+    else:
+        click.echo("recipes folder or recipeindex file does not exist :(\n"
+                   "run \"list-recipes\" to create them")

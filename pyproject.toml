@@ -15,6 +15,7 @@ remove-recipe = "serialn:remove_recipe"
 search-tags = "serialn:search_tags"
 add-tags = "serialn:add_tags"
 edit-recipe = "serialn:edit_recipe"
+recipe-settings = "serialn:recipe_settings"
 
 [build-system]
 requires = ["flit_core<4"]
