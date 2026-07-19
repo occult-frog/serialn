@@ -72,7 +72,7 @@ def checkRecipeExistence(recipename):
         return "doesn't exist"
 
 
-def printRecipe(recipefolder, file, scale):
+def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolor="", notecolor="", tagcolor=""):
     recipefile = open(recipefolder / f"{file}", "r")
     reader = list(csv.reader(recipefile))
     ingredients = []
@@ -81,7 +81,6 @@ def printRecipe(recipefolder, file, scale):
     steps = []
     extranotes = []
     tags = reader[0][5]
-    recipe = ""
 
     for i in reader:
         ingredients.append(i[0])
@@ -92,38 +91,42 @@ def printRecipe(recipefolder, file, scale):
 
     recipefile.close()
 
-    recipe = "Ingredients:\n"
+    click.echo("\nIngredients:")
     for i in range(len(ingredients)):
         if ingredients[i] == "none":
             break
         else:
             if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
-                recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+                click.secho(f"{i + 1}. ", nl=False)
+                click.secho(f"{ingredients[i]}", fg=ingcolor)
             elif ingredientunits[i] == "no_unit":
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {float(ingredientamounts[i])*scale}\n")
+                click.secho(f"{i + 1}. ", nl=False)
+                click.secho(f"{ingredients[i]} -- {float(ingredientamounts[i])*scale}", fg=ingcolor)
             elif ingredientamounts[i] == "no_amount":
-                recipe += "".join(f"{i + 1}. {ingredients[i]}\n")
+                click.secho(f"{i + 1}. ", nl=False)
+                click.secho(f"{ingredients[i]}", fg=ingcolor)
             else:
-                recipe += "".join(f"{i + 1}. {ingredients[i]} -- {float(ingredientamounts[i])*scale} {ingredientunits[i]}\n")
+                click.secho(f"{i + 1}. ", nl=False)
+                click.secho(f"{ingredients[i]} -- {float(ingredientamounts[i])*scale} {ingredientunits[i]}", fg=ingcolor)
 
-    recipe += "".join("\nSteps:\n")
+    click.echo("\nSteps:")
     for i in range(len(steps)):
         if steps[i] == "none":
             break
         else:
-            recipe += "".join(f"{i + 1}. {steps[i]}\n")
+            click.secho(f"{i + 1}. ", nl=False)
+            click.secho(f"{steps[i]}", fg=stepcolor)
 
-    recipe += "".join("\nExtra notes:\n")
+    click.echo("\nExtra notes:")
     for i in range(len(extranotes)):
         if extranotes[i] == "none":
             break
         else:
-            recipe += "".join(f"{i + 1}. {extranotes[i]}\n")
+            click.secho(f"{i + 1}. ", nl=False)
+            click.secho(f"{extranotes[i]}", fg=amountcolor)
 
-    recipe += "".join("\nTags:\n")
-    recipe += "".join(f"{tags}\n")
-
-    click.echo(recipe)
+    click.secho("\nTags:")
+    click.secho(f"{tags}\n", fg=tagcolor)
 
 
 def printRecipeList(a, b, c, d):

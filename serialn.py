@@ -393,9 +393,10 @@ def recipe_settings():
         else:
             settings = open(f"{recipefolder}/settings.csv", "w")
             writer = csv.writer(settings)
-            a = [["ing_color", ""], ["amount_color", ""], ["step_color", ""], ["note_color", ""]]
+            a = [["ing_color", ""], ["amount_color", ""], ["step_color", ""], ["note_color", ""], ["tag_color", ""]]
             writer.writerows(a)
             click.echo("settings file has been created :)\n")
+            settings.close()
 
         settings = open(f"{recipefolder}/settings.csv", "r")
         settings_data = list(csv.reader(settings))
@@ -405,6 +406,7 @@ def recipe_settings():
                               'Ingredient amount color ------ 2\n'
                               'Step color ------ 3\n'
                               'Note color ------ 4\n'
+                              'Tag color ------ 5\n'
                               'which setting do you want to change?: '))
         if settingtoedit == 1:
             newvalue = input("enter new ingredient color in the form of a hex code: ")
@@ -418,10 +420,14 @@ def recipe_settings():
         elif settingtoedit == 4:
             newvalue = input("enter new note color in the form of a hex code: ")
             settings_data[3][1] = newvalue
+        elif settingtoedit == 5:
+            newvalue = input("enter new tag color in the form of a hex code: ")
+            settings_data[4][1] = newvalue
 
         settings = open(f"{recipefolder}/settings.csv", "w+")
         writer = csv.writer(settings)
         writer.writerows(settings_data)
+        settings.close()
 
     else:
         click.echo("recipes folder or recipeindex file does not exist :(\n"
