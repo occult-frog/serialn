@@ -393,7 +393,7 @@ def recipe_settings():
         else:
             settings = open(f"{recipefolder}/settings.csv", "w")
             writer = csv.writer(settings)
-            a = [["ing_color", ""], ["amount_color", ""], ["step_color", ""], ["note_color", ""], ["tag_color", ""]]
+            a = [["ing_color", None], ["amount_color", None], ["step_color", None], ["note_color", None], ["tag_color", None]]
             writer.writerows(a)
             click.echo("settings file has been created :)\n")
             settings.close()
@@ -410,18 +410,28 @@ def recipe_settings():
                               'which setting do you want to change?: '))
         if settingtoedit == 1:
             newvalue = input("enter new ingredient color in the form of a hex code: ")
+            if newvalue == "None":
+                newvalue = None
             settings_data[0][1] = newvalue
         elif settingtoedit == 2:
             newvalue = input("enter new ingredient amount color in the form of a hex code: ")
+            if newvalue == "None":
+                newvalue = None
             settings_data[1][1] = newvalue
         elif settingtoedit == 3:
             newvalue = input("enter new step color in the form of a hex code: ")
+            if newvalue == "None":
+                newvalue = None
             settings_data[2][1] = newvalue
         elif settingtoedit == 4:
             newvalue = input("enter new note color in the form of a hex code: ")
+            if newvalue == "None":
+                newvalue = None
             settings_data[3][1] = newvalue
         elif settingtoedit == 5:
             newvalue = input("enter new tag color in the form of a hex code: ")
+            if newvalue == "None":
+                newvalue = None
             settings_data[4][1] = newvalue
 
         settings = open(f"{recipefolder}/settings.csv", "w+")

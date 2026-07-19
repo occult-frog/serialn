@@ -1,6 +1,10 @@
 import csv
 from pathlib import Path
 import click
+import rich.color
+from rich.console import Console
+
+console = Console(highlight=False)
 
 
 def refreshIndex(recipefolder):
@@ -72,7 +76,7 @@ def checkRecipeExistence(recipename):
         return "doesn't exist"
 
 
-def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolor="", notecolor="", tagcolor=""):
+def printRecipe(recipefolder, file, scale,):
     recipefile = open(recipefolder / f"{file}", "r")
     reader = list(csv.reader(recipefile))
     ingredients = []
@@ -81,6 +85,25 @@ def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolo
     steps = []
     extranotes = []
     tags = reader[0][5]
+    colors = [None, None, None, None, None]
+
+
+    if (recipefolder / "settings.csv").exists():
+        settingsfile = open(recipefolder / "settings.csv", "r")
+        settingsdata = list(csv.reader(settingsfile))
+        colors = [settingsdata[0][1], settingsdata[1][1], settingsdata[2][1], settingsdata[3][1], settingsdata[4][1]]
+
+
+    def checkColor(color):
+        try:
+            rich.color.Color.parse(color)
+            return True
+        except Exception:
+            return False
+
+    for i in colors:
+        if not checkColor(i):
+            colors[colors.index(i)] = None
 
     for i in reader:
         ingredients.append(i[0])
@@ -98,16 +121,18 @@ def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolo
         else:
             if ingredientunits[i] == "no_unit" and ingredientamounts[i] == "no_amount":
                 click.secho(f"{i + 1}. ", nl=False)
-                click.secho(f"{ingredients[i]}", fg=ingcolor)
+                console.print(f"{ingredients[i]}", style=colors[0])
             elif ingredientunits[i] == "no_unit":
                 click.secho(f"{i + 1}. ", nl=False)
-                click.secho(f"{ingredients[i]} -- {float(ingredientamounts[i])*scale}", fg=ingcolor)
+                console.print(f"{ingredients[i]} -- ", style=colors[0], end="")
+                console.print(f"{float(ingredientamounts[i])*scale}", style=colors[1])
             elif ingredientamounts[i] == "no_amount":
                 click.secho(f"{i + 1}. ", nl=False)
-                click.secho(f"{ingredients[i]}", fg=ingcolor)
+                console.print(f"{ingredients[i]}", style=colors[0])
             else:
                 click.secho(f"{i + 1}. ", nl=False)
-                click.secho(f"{ingredients[i]} -- {float(ingredientamounts[i])*scale} {ingredientunits[i]}", fg=ingcolor)
+                console.print(f"{ingredients[i]} -- ", style=colors[0], end="")
+                console.print(f"{float(ingredientamounts[i])*scale} {ingredientunits[i]}", style=colors[1])
 
     click.echo("\nSteps:")
     for i in range(len(steps)):
@@ -115,7 +140,7 @@ def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolo
             break
         else:
             click.secho(f"{i + 1}. ", nl=False)
-            click.secho(f"{steps[i]}", fg=stepcolor)
+            console.print(f"{steps[i]}", style=colors[2])
 
     click.echo("\nExtra notes:")
     for i in range(len(extranotes)):
@@ -123,10 +148,10 @@ def printRecipe(recipefolder, file, scale, ingcolor="", amountcolor="", stepcolo
             break
         else:
             click.secho(f"{i + 1}. ", nl=False)
-            click.secho(f"{extranotes[i]}", fg=amountcolor)
+            console.print(f"{extranotes[i]}", style=colors[3])
 
     click.secho("\nTags:")
-    click.secho(f"{tags}\n", fg=tagcolor)
+    console.print(f"{tags}\n", style=colors[4])
 
 
 def printRecipeList(a, b, c, d):
