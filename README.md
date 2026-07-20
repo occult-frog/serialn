@@ -89,9 +89,14 @@ Method 2:
     I. -ing or -i with the ingredient number to edit that ingredient.  
     II. -step or -s with the step number to edit that step.  
     III. -note or -n with the note number to edit that note.  
-or pass a combination of these.
+    or pass a combination of these.
     ```
     edit-recipe [RECIPENAME] [OPTIONS]
+    ```
+
+9. Allows you to edit settings such as how the recipe is shown. Currently the only settings are ingredient color, ingredient amount color, steps color, extra notes color and tag color. These determine the color of their respective items when the recipe is viewed via view-recipe
+    ```
+    recipe-settings
     ```
 
 ## Why was this made?
