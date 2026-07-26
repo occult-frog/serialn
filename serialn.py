@@ -397,37 +397,7 @@ def recipe_settings(recipe):
                 recipefile.close()
 
                 if len(recipefiledata[0]) == 11:
-                    settingtoedit = int(input('Ingredient color ------ 1\n'
-                                              'Ingredient amount color ------ 2\n'
-                                              'Step color ------ 3\n'
-                                              'Note color ------ 4\n'
-                                              'Tag color ------ 5\n'
-                                              'which setting do you want to change?: '))
-                    if settingtoedit == 1:
-                        newvalue = input("enter new ingredient color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][6] = newvalue
-                    elif settingtoedit == 2:
-                        newvalue = input("enter new ingredient amount color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][7] = newvalue
-                    elif settingtoedit == 3:
-                        newvalue = input("enter new step color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][8] = newvalue
-                    elif settingtoedit == 4:
-                        newvalue = input("enter new note color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][9] = newvalue
-                    elif settingtoedit == 5:
-                        newvalue = input("enter new tag color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][10] = newvalue
+                    recipefiledata = changeSettings(recipefiledata, i=0, j=7, k=True)
 
                 elif len(recipefiledata[0]) == 6:
                     recipefiledata[0].append("")
@@ -435,37 +405,7 @@ def recipe_settings(recipe):
                     recipefiledata[0].append("")
                     recipefiledata[0].append("")
                     recipefiledata[0].append("")
-                    settingtoedit = int(input('Ingredient color ------ 1\n'
-                                              'Ingredient amount color ------ 2\n'
-                                              'Step color ------ 3\n'
-                                              'Note color ------ 4\n'
-                                              'Tag color ------ 5\n'
-                                              'which setting do you want to change?: '))
-                    if settingtoedit == 1:
-                        newvalue = input("enter new ingredient color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][6] = newvalue
-                    elif settingtoedit == 2:
-                        newvalue = input("enter new ingredient amount color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][7] = newvalue
-                    elif settingtoedit == 3:
-                        newvalue = input("enter new step color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][8] = newvalue
-                    elif settingtoedit == 4:
-                        newvalue = input("enter new note color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][9] = newvalue
-                    elif settingtoedit == 5:
-                        newvalue = input("enter new tag color in the form of a hex code: ")
-                        if newvalue == "None":
-                            newvalue = None
-                        recipefiledata[0][10] = newvalue
+                    recipefiledata = changeSettings(recipefiledata, i=0, j=7, k=True)
 
                 elif len(recipefiledata[0]) > 6 and len(recipefiledata[0]) < 11:
                     pass
@@ -490,37 +430,7 @@ def recipe_settings(recipe):
             settings_data = list(csv.reader(settings))
             settings.close()
 
-            settingtoedit = int(input('Ingredient color ------ 1\n'
-                                  'Ingredient amount color ------ 2\n'
-                                  'Step color ------ 3\n'
-                                  'Note color ------ 4\n'
-                                  'Tag color ------ 5\n'
-                                  'which setting do you want to change?: '))
-            if settingtoedit == 1:
-                newvalue = input("enter new ingredient color in the form of a hex code: ")
-                if newvalue == "None":
-                    newvalue = None
-                settings_data[0][1] = newvalue
-            elif settingtoedit == 2:
-                newvalue = input("enter new ingredient amount color in the form of a hex code: ")
-                if newvalue == "None":
-                    newvalue = None
-                settings_data[1][1] = newvalue
-            elif settingtoedit == 3:
-                newvalue = input("enter new step color in the form of a hex code: ")
-                if newvalue == "None":
-                    newvalue = None
-                settings_data[2][1] = newvalue
-            elif settingtoedit == 4:
-                newvalue = input("enter new note color in the form of a hex code: ")
-                if newvalue == "None":
-                    newvalue = None
-                settings_data[3][1] = newvalue
-            elif settingtoedit == 5:
-                newvalue = input("enter new tag color in the form of a hex code: ")
-                if newvalue == "None":
-                    newvalue = None
-                settings_data[4][1] = newvalue
+            recipefiledata = changeSettings(settings_data, i=0, j=1, k=False)
 
             settings = open(f"{recipefolder}/settings.csv", "w+")
             writer = csv.writer(settings)

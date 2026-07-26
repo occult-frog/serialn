@@ -336,3 +336,47 @@ def removeRecipeLogic(recipefolder, recipename):
         (recipefolder / recipename).unlink()
         click.echo("recipe removed :)")
         refreshIndex(recipefolder)
+
+
+def changeSettings(filedata, i, j, k):
+    settingtoedit = int(input('Ingredient color ------ 1\n'
+                              'Ingredient amount color ------ 2\n'
+                              'Step color ------ 3\n'
+                              'Note color ------ 4\n'
+                              'Tag color ------ 5\n'
+                              'which setting do you want to change?: '))
+    if settingtoedit == 1:
+        newvalue = input("enter new ingredient color in the form of a hex code: ")
+        if newvalue == "None":
+            newvalue = None
+        if k: filedata[i][j] = newvalue
+        else: filedata[i][j] = newvalue
+        return filedata
+    elif settingtoedit == 2:
+        newvalue = input("enter new ingredient amount color in the form of a hex code: ")
+        if newvalue == "None":
+            newvalue = None
+        if k: filedata[i][j+1] = newvalue
+        else: filedata[i+1][j] = newvalue
+        return filedata
+    elif settingtoedit == 3:
+        newvalue = input("enter new step color in the form of a hex code: ")
+        if newvalue == "None":
+            newvalue = None
+        if k: filedata[i][j+2] = newvalue
+        else: filedata[i+2][j] = newvalue
+        return filedata
+    elif settingtoedit == 4:
+        newvalue = input("enter new note color in the form of a hex code: ")
+        if newvalue == "None":
+            newvalue = None
+        if k: filedata[i][j+3] = newvalue
+        else: filedata[i+3][j] = newvalue
+        return filedata
+    elif settingtoedit == 5:
+        newvalue = input("enter new tag color in the form of a hex code: ")
+        if newvalue == "None":
+            newvalue = None
+        if k: filedata[i][j+4] = newvalue
+        else: filedata[i+4][j] = newvalue
+        return filedata
