@@ -55,7 +55,8 @@ def list_recipes(tags):
 @click.command()
 @click.argument('recipename', required=False, default=None)
 @click.option('--scale', '-s', required=False, default=1.0, type=float)
-def view_recipe(recipename, scale):
+@click.option('--global_settings', '-g', is_flag=True, default=False)
+def view_recipe(recipename, scale, global_settings):
     recipefolder = Path.home()/"recipes"
 
     if recipefolder.exists() and (recipefolder/"recipeindex.csv").exists():
@@ -70,7 +71,7 @@ def view_recipe(recipename, scale):
             else:
                 click.echo("invalid number entered :(")
         elif checkRecipeExistence(recipename) == "exists":
-            printRecipe(recipefolder, f"{recipename}.csv", scale)
+            printRecipe(recipefolder, f"{recipename}.csv", scale, global_settings=global_settings)
         elif checkRecipeExistence(recipename) == "only in index":
             click.echo("recipe is only in index and not in folder :(")
         elif checkRecipeExistence(recipename) == "not in index":

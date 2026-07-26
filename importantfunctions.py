@@ -76,7 +76,7 @@ def checkRecipeExistence(recipename):
         return "doesn't exist"
 
 
-def printRecipe(recipefolder, file, scale,):
+def printRecipe(recipefolder, file, scale, global_settings=False):
     recipefile = open(recipefolder / f"{file}", "r")
     reader = list(csv.reader(recipefile))
     ingredients = []
@@ -87,11 +87,13 @@ def printRecipe(recipefolder, file, scale,):
     tags = reader[0][5]
     colors = [None, None, None, None, None]
 
-
-    if (recipefolder / "settings.csv").exists():
+    if not global_settings:
+        colors = [reader[0][6], reader[0][7], reader[0][8], reader[0][9], reader[0][10]]
+    elif (recipefolder / "settings.csv").exists():
         settingsfile = open(recipefolder / "settings.csv", "r")
         settingsdata = list(csv.reader(settingsfile))
         colors = [settingsdata[0][1], settingsdata[1][1], settingsdata[2][1], settingsdata[3][1], settingsdata[4][1]]
+        settingsfile.close()
 
 
     def checkColor(color):
